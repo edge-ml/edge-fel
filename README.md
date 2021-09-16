@@ -7,6 +7,7 @@ Feature extraction library by _edge-ml_ focused on efficiency written in C++ for
 - what broader benefit could we generate aside from edge-ml with this library?
 
 ## List of features
+Just some basic random stuff for now.
 
 | Acronym   | Signature                      | Description                                                                              | Status  |
 | :-------- | :----------------------------- | :--------------------------------------------------------------------------------------- | :-----  |
