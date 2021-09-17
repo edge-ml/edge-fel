@@ -2,7 +2,7 @@
 Feature extraction library by _edge-ml_ focused on efficiency written in C++ for Arduino.
 
 ### Questions:
-- we want to avoid loading useless methods onto arduino if we do not need them (but is it really worth it? how much can we save?)
+- we want to avoid loading useless methods onto arduino if we do not need them (but is it really worth it? how much can we save?) Probably the compiler just excludes them?
 - we want to have control over the feature extraction library that we are using in the backend stack. are there existing options that make more sense to reuse?
 - what broader benefit could we generate aside from edge-ml with this library?
 - what about backward compatability to tsfresh? can we port another framework maybe?
