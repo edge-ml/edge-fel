@@ -1,14 +1,10 @@
-#include <vector>
-#include <iostream>
-
-using namespace std;
-
-double absolute_energy(vector<double> x) // Returns the absolute energy of the time series which is the sum over the squared values.
+double absolute_energy(double x[]) // Returns the absolute energy of the time series which is the sum over the squared values.
 {
     try
     {
+        unsigned size = sizeof(x)/sizeof(double);
         double result = 0;
-        for (int i = 0; i < x.size(); i++)
+        for (int i = 0; i < size; i++)
             {
                 result += x[i]*x[i];
             }
@@ -18,16 +14,17 @@ double absolute_energy(vector<double> x) // Returns the absolute energy of the t
 
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
 }
 
-double absolute_max(vector<double> x) // Calculates the highest absolute value of the time series x.
+double absolute_max(double x[]) // Calculates the highest absolute value of the time series x.
 {
     try
     {
+        unsigned size = sizeof(x)/sizeof(double);
         double result = abs(x[0]);
-        for (int i = 1; i < x.size(); i++)
+        for (int i = 1; i < size; i++)
         {
             if (abs(x[i]) > result)
                 {
@@ -40,17 +37,18 @@ double absolute_max(vector<double> x) // Calculates the highest absolute value o
 
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
     
 }
 
-double absolute_sum_of_changes(vector<double> x) // Returns the sum over the absolute value of consecutive changes in the series x.
+double absolute_sum_of_changes(double x[]) // Returns the sum over the absolute value of consecutive changes in the series x.
 {
     try
     {
+        unsigned size = sizeof(x)/sizeof(double);
         double result = 0;
-        for (int i = 0; i < x.size() - 1; i++)
+        for (int i = 0; i < size - 1; i++)
         {
             result += abs(x[i+1] - x[i]);
         }
@@ -59,25 +57,26 @@ double absolute_sum_of_changes(vector<double> x) // Returns the sum over the abs
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
     
 }
 
-unsigned count_above_mean(vector<double> x) // Returns the number of values in x that are higher than the mean of x.
+double count_above_mean(double x[]) // Returns the number of values in x that are higher than the mean of x.
 {
     try
     {
-        unsigned result = 0;
+        unsigned size = sizeof(x)/sizeof(double);
+        double result = 0;
         double mean;
         double sum = 0;
-        for (int i = 0; i < x.size(); i++)
+        for (int i = 0; i < size; i++)
         {
             sum += x[i];
         }
-        mean = sum/x.size();
+        mean = sum/size;
 
-        for (int i = 0; i < x.size(); i++)
+        for (int i = 0; i < size; i++)
         {
             if (x[i] > mean)
             {
@@ -89,25 +88,26 @@ unsigned count_above_mean(vector<double> x) // Returns the number of values in x
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
     
 }
 
-unsigned count_below_mean(vector<double> x) // Returns the number of values in x that are lower than the mean of x.
+double count_below_mean(double x[]) // Returns the number of values in x that are lower than the mean of x.
 {
     try
     {
-        unsigned result = 0;
+        unsigned size = sizeof(x)/sizeof(double);
+        double result = 0;
         double mean;
         double sum = 0;
-        for (int i = 0; i < x.size(); i++)
+        for (int i = 0; i < size; i++)
         {
             sum += x[i];
         }
-        mean = sum/x.size();
+        mean = sum/size;
 
-        for (int i = 0; i < x.size(); i++)
+        for (int i = 0; i < size; i++)
         {
             if (x[i] < mean)
             {
@@ -119,42 +119,44 @@ unsigned count_below_mean(vector<double> x) // Returns the number of values in x
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
     
 }
 
-bool has_duplicate_values(vector<double> x) // Checks if any value in x occurs more than once.
+double has_duplicate_values(double x[]) // Checks if any value in x occurs more than once.
 {
     try
     {
-        for (int i = 0; i < x.size() - 1; i++)
+        unsigned size = sizeof(x)/sizeof(double);
+        for (int i = 0; i < size - 1; i++)
         {
-            for (int j = i + 1; j < x.size(); j++)
+            for (int j = i + 1; j < size; j++)
             {
                 if (x[i] == x[j])
                 {
-                    return true;
+                    return 1;
                 }
             }
         }
 
-        return false;
+        return 0;
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
     
 }
 
-bool has_duplicate_maxima(vector<double> x) // Checks if the maximum value of x is observed more than once.
+double has_duplicate_maxima(double x[]) // Checks if the maximum value of x is observed more than once.
 {
     try
     {
+        unsigned size = sizeof(x)/sizeof(double);
         double max = x[0];
         unsigned counter_of_maxima = 0;
-        for (int i = 1; i < x.size(); i++)
+        for (int i = 1; i < size; i++)
         {
             if (x[i] > max)
             {
@@ -162,34 +164,35 @@ bool has_duplicate_maxima(vector<double> x) // Checks if the maximum value of x 
             }
         }
 
-        for (int i = 1; i < x.size(); i++)
+        for (int i = 1; i < size; i++)
         {
             if (x[i] == max)
             {
                 counter_of_maxima++;
                 if (counter_of_maxima == 2)
                 {
-                    return true;
+                    return 1;
                 }
             }
         }
 
-        return false;
+        return 0;
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
     
 }
 
-bool has_duplicate_minima(vector<double> x) // Checks if the minimum value of x is observed more than once.
+double has_duplicate_minima(double x[]) // Checks if the minimum value of x is observed more than once.
 {
     try
     {
+        unsigned size = sizeof(x)/sizeof(double);
         double min = x[0];
         unsigned counter_of_minima = 0;
-        for (int i = 1; i < x.size(); i++)
+        for (int i = 1; i < size; i++)
         {
             if (x[i] < min)
             {
@@ -197,51 +200,53 @@ bool has_duplicate_minima(vector<double> x) // Checks if the minimum value of x 
             }
         }
 
-        for (int i = 1; i < x.size(); i++)
+        for (int i = 1; i < size; i++)
         {
             if (x[i] == min)
             {
                 counter_of_minima++;
                 if (counter_of_minima == 2)
                 {
-                    return true;
+                    return 1;
                 }
             }
         }
 
-        return false;
+        return 0;
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
     
 }
 
-double mean(vector<double> x) // Returns the mean of x.
+double mean(double x[]) // Returns the mean of x.
 {
     try
     {
+        unsigned size = sizeof(x)/sizeof(double);
         double sum = 0;
-        for (int i = 0; i < x.size(); i++)
+        for (int i = 0; i < size; i++)
         {
             sum += x[i];
         }
 
-        return sum/x.size();
+        return sum/size;
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
 }
 
-double maximum(vector<double> x) // Calculates the highest value of the time series x.
+double maximum(double x[]) // Calculates the highest value of the time series x.
 {
     try
     {
+        unsigned size = sizeof(x)/sizeof(double);
         double max = x[0];
-        for (int i = 1; i < x.size(); i++)
+        for (int i = 1; i < size; i++)
         {
             if (x[i] > max)
             {
@@ -254,16 +259,17 @@ double maximum(vector<double> x) // Calculates the highest value of the time ser
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
 }
 
-double minimum(vector<double> x) // Calculates the lowest value of the time series x.
+double minimum(double x[]) // Calculates the lowest value of the time series x.
 {
      try
     {
+        unsigned size = sizeof(x)/sizeof(double);
         double min = x[0];
-        for (int i = 1; i < x.size(); i++)
+        for (int i = 1; i < size; i++)
         {
             if (x[i] < min)
             {
@@ -275,17 +281,18 @@ double minimum(vector<double> x) // Calculates the lowest value of the time seri
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
 }
 
-unsigned first_location_of_maximum(vector<double> x) // Returns the first location of the maximum value of x.
+double first_location_of_maximum(double x[]) // Returns the first location of the maximum value of x.
 {
     try
     {
+        unsigned size = sizeof(x)/sizeof(double);
         double max = x[0];
-        unsigned location = 0;
-        for (int i = 1; i < x.size(); i++)
+        double location = 0;
+        for (int i = 1; i < size; i++)
         {
             if (x[i] > max)
             {
@@ -299,17 +306,18 @@ unsigned first_location_of_maximum(vector<double> x) // Returns the first locati
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
 }
 
-double first_location_of_minimum(vector<double> x) // Returns the first location of the minimum value of x.
+double first_location_of_minimum(double x[]) // Returns the first location of the minimum value of x.
 {
      try
     {
+        unsigned size = sizeof(x)/sizeof(double);
         double min = x[0];
         unsigned location = 0;
-        for (int i = 1; i < x.size(); i++)
+        for (int i = 1; i < size; i++)
         {
             if (x[i] < min)
             {
@@ -322,17 +330,18 @@ double first_location_of_minimum(vector<double> x) // Returns the first location
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
 }
 
-unsigned last_location_of_maximum(vector<double> x) // Returns the last location of the maximum value of x.
+double last_location_of_maximum(double x[]) // Returns the last location of the maximum value of x.
 {
     try
     {
-        double max = x[x.size() - 1];
-        unsigned location = x.size() - 1;
-        for (int i = x.size() - 2; i > 0; i--)
+        unsigned size = sizeof(x)/sizeof(double);
+        double max = x[size - 1];
+        double location = size - 1;
+        for (int i = size - 2; i > 0; i--)
         {
             if (x[i] > max)
             {
@@ -346,17 +355,18 @@ unsigned last_location_of_maximum(vector<double> x) // Returns the last location
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
 }
 
-unsigned last_location_of_minimum(vector<double> x) // Returns the last location of the minimum value of x.
+double last_location_of_minimum(double x[]) // Returns the last location of the minimum value of x.
 {
     try
     {
-        double min = x[x.size() - 1];
-        unsigned location = x.size() - 1;
-        for (int i = x.size() - 2; i > 0; i--)
+        unsigned size = sizeof(x)/sizeof(double);
+        double min = x[size - 1];
+        double location = size - 1;
+        for (int i = size - 2; i > 0; i--)
         {
             if (x[i] < min)
             {
@@ -370,16 +380,17 @@ unsigned last_location_of_minimum(vector<double> x) // Returns the last location
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
 }
 
-double sum_values(vector<double> x) // Calculates the sum over the time series x values.
+double sum_values(double x[]) // Calculates the sum over the time series x values.
 {
     try
     {
+        unsigned size = sizeof(x)/sizeof(double);
         double sum = 0;
-        for (int i = 0; i < x.size(); i++)
+        for (int i = 0; i < size; i++)
         {
             sum += x[i];
         }
@@ -388,38 +399,39 @@ double sum_values(vector<double> x) // Calculates the sum over the time series x
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
     
 }
 
-double variance(vector<double> x) // Returns the variance of x.
+double variance(double x[]) // Returns the variance of x.
 {
     try
     {
+        unsigned size = sizeof(x)/sizeof(double);
         double sum = 0;
         double mean;
         double tmp = 0;
-        for (int i = 0; i < x.size(); i++)
+        for (int i = 0; i < size; i++)
         {
             sum += x[i];
         }
-        mean = sum/x.size();
+        mean = sum/size;
 
-        for (int i = 0; i < x.size(); i++)
+        for (int i = 0; i < size; i++)
         {
             tmp += (x[i]-mean)*(x[i]-mean);
         }
 
-        return tmp/x.size();
+        return tmp/size;
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        throw e.what();
     }
 }
 
-auto extract(vector<double> x, unsigned id)
+double extract(double x[], int id)
 {
     switch (id)
     {
@@ -427,6 +439,19 @@ auto extract(vector<double> x, unsigned id)
         case 1: return absolute_max(x); break;
         case 2: return absolute_sum_of_changes(x); break;
         case 3: return count_above_mean(x); break;
-        default: return 0;
+        case 4: return count_below_mean(x); break;
+        case 5: return has_duplicate_values(x); break;
+        case 6: return has_duplicate_maxima(x); break;
+        case 7: return has_duplicate_minima(x); break;
+        case 8: return mean(x); break;
+        case 9: return maximum(x); break;
+        case 10: return minimum(x); break;
+        case 11: return first_location_of_maximum(x); break;
+        case 12: return first_location_of_minimum(x); break;
+        case 13: return last_location_of_maximum(x); break;
+        case 14: return last_location_of_minimum(x); break;
+        case 15: return sum_values(x); break;
+        case 16: return variance(x); break;
+        default: return -1*(unsigned(0-1)); break;
     }
 }
