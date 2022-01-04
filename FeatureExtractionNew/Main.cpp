@@ -1,6 +1,6 @@
-#include "Extractor.h"
-#include "ExtractionDelegate.h"
-#include "ExtractionHandler.h"
+#include "FeatureExtractionNew.ino/Extractor.h"
+#include "FeatureExtractionNew.ino/ExtractionDelegate.h"
+#include "FeatureExtractionNew.ino/ExtractionHandler.h"
 #include "Data.h"
 #include <vector>
 #include <iostream>
@@ -17,16 +17,20 @@ int main() {
 	delegate.fillHandlerMap();
 	ExtractionDelegate::doCache = false;
 
+	
+	string caching = ExtractionDelegate::doCache ? "activated" : "not active";
+	cout << "Starting feature extraction, caching " << caching << "\n";
+
 	clock_t start, end;
 	start = clock();
 	map<string, double> results = delegate.extractAll(values);
 	end = clock();
-	cout << "time: " << ((double) end - start)/CLOCKS_PER_SEC << "\n";
 
 	for (auto single : results) {
 		cout << single.first << ": " << single.second << "\n";
 	}
 
+	cout << "Feature extraction finished, took: " << ((double)end - start) / CLOCKS_PER_SEC << "\n";
 }
 
 
