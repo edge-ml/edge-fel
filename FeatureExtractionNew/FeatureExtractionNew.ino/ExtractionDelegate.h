@@ -26,15 +26,18 @@ namespace ed {
 		static handler_map handlers;
 		void fillHandlerMap();
 
+		//List of features that take parameters
+		static std::vector<std::string> parameterFeatures;
+
 		//Cache of calculated values
 		static std::map<std::string, double> calculated;
 		static bool doCache;
 		static void checkAndInsert(std::string, double);
 
 		//Extraction helpers
-		double extractOne(std::string, std::vector<double>&);
-		std::vector<double> extractSome(std::vector<std::string>&, std::vector<double>&);
-		std::map<std::string, double> extractAll(std::vector <double>&);
+		double extractOne(std::string, std::vector<double>&, std::map<std::string, double>&);
+		std::map<std::string, double> extractSome(std::vector<std::string>&, std::vector<double>&, std::map<std::string, double>&);
+		std::map<std::string, double> extractAll(std::vector <double>&, std::map<std::string, double>&);
 
 	};
 

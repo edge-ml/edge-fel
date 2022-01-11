@@ -8,38 +8,71 @@ bool ExtractionDelegate::doCache = false;
 map<string, double> ExtractionDelegate::calculated;
 ExtractionDelegate::handler_map ExtractionDelegate::handlers;
 ExtractionHandler handler;
+vector<string> ExtractionDelegate::parameterFeatures = {"mean_n_abs_max",  "change_quantile", "range_count", "count_above", "count_below", "quantile", "autocorrelation" };
 
 //Extracts the requested feature from the data
-double ExtractionDelegate::extractOne(string feature, vector<double>& values) {
-	auto iter = ExtractionDelegate::handlers.find(feature);
-	if (!(iter == ExtractionDelegate::handlers.end())) {
-		return (handler.*(iter->second))(feature, values);
+double ExtractionDelegate::extractOne(string feature, vector<double>& values, map<string, double>& params) {
+	if (params.size() > 0) {
+		if (feature == "mean_n_abs_max") {
+			return handler.handle_mean_n_abs_max(feature, values, params.at("mean_n_abs_max_n"));
+		}
+		else if (feature == "change_quantile") {
+			return handler.handle_change_quantile(feature, values, params.at("change_quantile_lower"), params.at("change_quantile_upper"), "sum");
+		}
+		else if (feature == "range_count") {
+			return handler.handle_range_count(feature, values, params.at("range_count_lower"), params.at("range_count_upper"));
+		}
+		else if (feature == "count_above") {
+			return handler.handle_count_above(feature, values, params.at("count_above_x"));
+		}
+		else if (feature == "count_below") {
+			return handler.handle_count_above(feature, values, params.at("count_below_x"));
+		}
+		else if (feature == "quantile") {
+			return handler.handle_quantile(feature, values, params.at("quantile_q"));
+		}
+		else if (feature == "autocorrelation") {
+			return handler.handle_autocorrelation(feature, values, params.at("autocorrelation_lag"));
+		}
+		else {
+			return 0.0;
+		}
 	}
+	else {
+		auto iter = ExtractionDelegate::handlers.find(feature);
+		if (!(iter == ExtractionDelegate::handlers.end())) {
+			return (handler.*(iter->second))(feature, values);
+		}
+	}
+
 
 	return 0.0;
 }
 
 //Extracts the requested features from the data
-vector<double> ExtractionDelegate::extractSome(vector<string>& features, vector<double>& values) {
-	vector<double> results;
+map<string, double> ExtractionDelegate::extractSome(vector<string>& features, vector<double>& values, map<string, double>& params) {
+	map<string, double> results;
 	for (string feature : features) {
-		double value = extractOne(feature, values);
-		results.push_back(value);
+		double value = extractOne(feature, values, params);
+		results.emplace(feature, value);
 	}
 
 	return results;
 }
 
 //Extracts all available features from the data
-map<string, double> ExtractionDelegate::extractAll(vector<double>& values) {
+map<string, double> ExtractionDelegate::extractAll(vector<double>& values, map<string, double>& params) {
 	map<string, double> results;
 	for (auto iter : ExtractionDelegate::handlers) {
 		double value = (handler.*(iter.second))(iter.first, values);
 		results.emplace(iter.first, value);
 	}
-	
+
+	map<string, double> parameterFeatures = extractSome(ExtractionDelegate::parameterFeatures, values, params);
+	results.insert(parameterFeatures.begin(), parameterFeatures.end());
 	return results;
 }
+
 
 //Helper method for fail-fast cache check and insertion
 void ExtractionDelegate::checkAndInsert(string feature, double value) {
@@ -50,8 +83,6 @@ void ExtractionDelegate::checkAndInsert(string feature, double value) {
 
 //Initializes the handler map 
 void ExtractionDelegate::fillHandlerMap() {
-
-	ExtractionDelegate::handlers["mean"] = &ExtractionHandler::handle_mean;
 	ExtractionDelegate::handlers.emplace("mean", &ExtractionHandler::handle_mean);
 	ExtractionDelegate::handlers.emplace("mean_abs_dev", &ExtractionHandler::handle_mean_abs_dev);
 	ExtractionDelegate::handlers.emplace("mean_geometric", &ExtractionHandler::handle_mean_geometric);

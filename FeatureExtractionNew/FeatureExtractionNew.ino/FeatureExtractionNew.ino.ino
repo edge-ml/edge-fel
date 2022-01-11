@@ -12,6 +12,7 @@ using namespace ex;
 
 void setup() {
   Serial.begin(115200);
+  delay(10);
 }
 
 void loop() {
@@ -24,22 +25,25 @@ void loop() {
     Serial.println(input[pos]);
     delay(10);
     pos++;
-
-    String feature = input;
-    if (feature == "all"){
+    if((input[0] == 'a') && (input[1] == 'l') && (input[2] == 'l')){
       start = true;
-    } 
+    }
     
     if (start){
-      Serial.println("Starting feature extraction");
+      Serial.print("Starting feature extraction, Caching = ");
       
       ExtractionDelegate delegate;
       delegate.fillHandlerMap();
-      ExtractionDelegate::doCache = true;
-      vector<double> values = Data::values_thousand;
+      ExtractionDelegate::doCache = false;
+      vector<double> values = Data::values_hundred;
 
+      Serial.println(ExtractionDelegate::doCache);
+
+      std::map<string, double> params = { {"mean_n_abs_max_n", 8}, {"change_quantile_lower", 0.1}, {"change_quantile_upper", 0.1},  {"range_count_lower",-1}, 
+          {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1} };
+      
       long timer = millis();
-      std::map<string, double> results = delegate.extractAll(values);
+      std::map<string, double> results = delegate.extractAll(values, params);
       long dur = millis() - timer;
       
       for (auto single : results) {

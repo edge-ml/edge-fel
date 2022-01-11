@@ -35,27 +35,27 @@ namespace eh {
 		double handle_last_location_of_min(std::string, std::vector<double>&);
 		double handle_first_location_of_max(std::string, std::vector<double>&);
 		double handle_first_location_of_min(std::string, std::vector<double>&);
-		//double handle_mean_n_abs_max(std::string, std::vector<double>&, int);
+		double handle_mean_n_abs_max(std::string, std::vector<double>&, double);
 
 		double handle_mean_abs_change(std::string, std::vector<double>&);
 		double handle_mean_change(std::string, std::vector<double>&);
 		double handle_abs_sum_of_changes(std::string, std::vector<double>&);
-		//double handle_change_quantile(std::string, std::vector<double>&, double, double, std::string);
+		double handle_change_quantile(std::string, std::vector<double>&, double, double, std::string);
 
 		double handle_sum(std::string, std::vector<double>&);
-		//double handle_range_count(std::string, std::vector<double>&, double, double);
+		double handle_range_count(std::string, std::vector<double>&, double, double);
 		double handle_non_zero_count(std::string, std::vector<double>&);
-		//double handle_count_above(std::string, std::vector<double>&, double);
+		double handle_count_above(std::string, std::vector<double>&, double);
 		double handle_count_above_mean(std::string, std::vector<double>&);
-		//double handle_count_below(std::string, std::vector<double>&, double);
+		double handle_count_below(std::string, std::vector<double>&, double);
 		double handle_count_below_mean(std::string, std::vector<double>&);
 		double handle_root_mean_square(std::string, std::vector<double>&);
-		//double handle_quantile(std::string, std::vector<double>&, double);
+		double handle_quantile(std::string, std::vector<double>&, double);
 		double handle_interquartile_range(std::string, std::vector<double>&);
 		double handle_negative_turnings(std::string, std::vector<double>&);
 		double handle_positive_turnings(std::string, std::vector<double>&);
 
-		//double handle_autocorrelation(std::string, std::vector<double>&, int);
+		double handle_autocorrelation(std::string, std::vector<double>&, double);
 		
 		//std::vector<ex::Extractor::cd> handle_fft(std::string, std::vector<double>&);
 		/*
