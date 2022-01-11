@@ -50,6 +50,8 @@ void ExtractionDelegate::checkAndInsert(string feature, double value) {
 
 //Initializes the handler map 
 void ExtractionDelegate::fillHandlerMap() {
+
+	ExtractionDelegate::handlers["mean"] = &ExtractionHandler::handle_mean;
 	ExtractionDelegate::handlers.emplace("mean", &ExtractionHandler::handle_mean);
 	ExtractionDelegate::handlers.emplace("mean_abs_dev", &ExtractionHandler::handle_mean_abs_dev);
 	ExtractionDelegate::handlers.emplace("mean_geometric", &ExtractionHandler::handle_mean_geometric);
@@ -64,41 +66,44 @@ void ExtractionDelegate::fillHandlerMap() {
 	ExtractionDelegate::handlers.emplace("kurtosis", &ExtractionHandler::handle_kurtosis);
 	ExtractionDelegate::handlers.emplace("skewness", &ExtractionHandler::handle_skewness);
 	ExtractionDelegate::handlers.emplace("zero_cross", &ExtractionHandler::handle_zero_cross);
+
+	ExtractionDelegate::handlers.emplace("max", &ExtractionHandler::handle_max);
+	ExtractionDelegate::handlers.emplace("abs_max", &ExtractionHandler::handle_abs_max);
+	ExtractionDelegate::handlers.emplace("min", &ExtractionHandler::handle_min);
+	ExtractionDelegate::handlers.emplace("last_location_of_max", &ExtractionHandler::handle_last_location_of_max);
+	ExtractionDelegate::handlers.emplace("last_location_of_min", &ExtractionHandler::handle_last_location_of_min);
+	ExtractionDelegate::handlers.emplace("first_location_of_max", &ExtractionHandler::handle_first_location_of_max);
+	ExtractionDelegate::handlers.emplace("first_location_of_min", &ExtractionHandler::handle_first_location_of_min);
+	//ExtractionDelegate::handlers.emplace("mean_n_abs_max_values", &ExtractionHandler::handle_mean_n_abs_max);
+
+	ExtractionDelegate::handlers.emplace("mean_abs_change", &ExtractionHandler::handle_mean_abs_change);
+	ExtractionDelegate::handlers.emplace("mean_change", &ExtractionHandler::handle_mean_change);
+	ExtractionDelegate::handlers.emplace("abs_sum_of_changes", &ExtractionHandler::handle_abs_sum_of_changes);
+	//ExtractionDelegate::handlers.emplace("change_quantile", &ExtractionHandler::handle_change_quantile);
+
+	ExtractionDelegate::handlers.emplace("sum", &ExtractionHandler::handle_sum);
+	//ExtractionDelegate::handlers.emplace("range_count", &ExtractionHandler::handle_range_count);
+	ExtractionDelegate::handlers.emplace("non_zero_count", &ExtractionHandler::handle_non_zero_count);
+	//ExtractionDelegate::handlers.emplace("count_above", &ExtractionHandler::handle_count_above);
+	ExtractionDelegate::handlers.emplace("count_above_mean", &ExtractionHandler::handle_count_above_mean);
+	//ExtractionDelegate::handlers.emplace("count_below", &ExtractionHandler::handle_count_below);
+	ExtractionDelegate::handlers.emplace("count_below_mean", &ExtractionHandler::handle_count_below_mean);
+	ExtractionDelegate::handlers.emplace("root_mean_square", &ExtractionHandler::handle_root_mean_square);
+	//ExtractionDelegate::handlers.emplace("quantile", &ExtractionHandler::handle_quantile);
+	ExtractionDelegate::handlers.emplace("interquartile_range", &ExtractionHandler::handle_interquartile_range);
+	ExtractionDelegate::handlers.emplace("negative_turnings", &ExtractionHandler::handle_negative_turnings);
+	ExtractionDelegate::handlers.emplace("positive_turnings", &ExtractionHandler::handle_positive_turnings);
+
+	//ExtractionDelegate::handlers.emplace("autocorrelation", &ExtractionHandler::handle_autocorrelation);
+	
 }
+
 /*
-case "max": return handler.handle_max(feature, values);
-case "abs_max": return handler.handle_abs_max(feature, values);
-case "min": return handler.handle_min(feature, values);
-case "last_location_of_max": return handler.handle_last_location_of_max(feature, values);
-case "last_location_of_min": return handler.handle_last_location_of_min(feature, values);
-case "first_location_of_max": return handler.handle_first_location_of_max(feature, values);
-case "first_location_of_min": return handler.handle_first_location_of_min(feature, values);
-case "mean_n_abs_max_values": return handler.handle_mean_n_abs_max_values(feature, values);
-
-case "mean_abs_change": return handler.handle_mean_abs_change(feature, values);
-case "mean_change": return handler.handle_mean_change(feature, values);
-case "abs_sum_of_changes": return handler.handle_abs_sum_of_changes(feature, values);
-case "change_quantile": return handler.handle_change_quantile(feature, values);
-
-case "sum": return handler.handle_sum(feature, values);
-case "range_count": return handler.handle_range_count(feature, values);
-case "non_zero_count": return handler.handle_non_zero_count(feature, values);
-case "count_above": return handler.handle_count_above(feature, values);
-case "count_above_mean": return handler.handle_count_above_mean(feature, values);
-case "count_below": return handler.handle_count_below(feature, values);
-case "count_below_mean": return handler.handle_count_below_mean(feature, values);
-case "root_mean_square": return handler.handle_root_mean_square(feature, values);
-case "quantile": return handler.handle_quantile(feature, values);
-case "interquartile_range": return handler.handle_interquartile_range(feature, values);
-case "negative_turnings": return handler.handle_negative_turnings(feature, values);
-case "positive_turnings": return handler.handle_positive_turnings(feature, values);
-
-case "autocorrelation": return handler.handle_autocorrelation(feature, values);
 case "fft": return handler.handle_fft(feature, values);
 case "lpc": return handler.handle_lpc(feature, values);
 case "lpcc": return handler.handle_lpcc(feature, values);
 case "mfcc": return handler.handle_mfcc(feature, values);
 
 default: return 0.0;
-}
-*/
+}*/
+

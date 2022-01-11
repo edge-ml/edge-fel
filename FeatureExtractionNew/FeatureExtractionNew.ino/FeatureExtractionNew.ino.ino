@@ -1,6 +1,7 @@
 #include "Extractor.h"
 #include "ExtractionDelegate.h"
 #include "ExtractionHandler.h"
+#include "Data.h"
 #include <vector>
 #include <iostream>
 
@@ -34,11 +35,11 @@ void loop() {
       
       ExtractionDelegate delegate;
       delegate.fillHandlerMap();
-      ExtractionDelegate::doCache = false;
-      vector<double> values_ten = { 1, 2, 2.5, -1, -2, 3.5, 0, -4, -1, 2 };
+      ExtractionDelegate::doCache = true;
+      vector<double> values = Data::values_thousand;
 
       long timer = millis();
-      std::map<string, double> results = delegate.extractAll(values_ten);
+      std::map<string, double> results = delegate.extractAll(values);
       long dur = millis() - timer;
       
       for (auto single : results) {

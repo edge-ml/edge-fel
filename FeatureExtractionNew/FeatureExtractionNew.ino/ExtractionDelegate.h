@@ -19,7 +19,7 @@ namespace ed {
 		
 	public:
 		//Function pointer type
-		typedef double (eh::ExtractionHandler::*handler_func) (std::string, std::vector<double>);
+		typedef double (eh::ExtractionHandler::*handler_func) (std::string, std::vector<double>&);
 
 		//Function pointer map
 	    typedef std::map<std::string, handler_func> handler_map;
@@ -31,6 +31,7 @@ namespace ed {
 		static bool doCache;
 		static void checkAndInsert(std::string, double);
 
+		//Extraction helpers
 		double extractOne(std::string, std::vector<double>&);
 		std::vector<double> extractSome(std::vector<std::string>&, std::vector<double>&);
 		std::map<std::string, double> extractAll(std::vector <double>&);

@@ -12,25 +12,38 @@ using namespace ex;
 
 int main() {
 	vector<double> values = Data::values_ten_thousand;
-
-	ExtractionDelegate delegate;
-	delegate.fillHandlerMap();
-	ExtractionDelegate::doCache = false;
-
+	values.insert(values.end(), Data::values_ten_thousand.begin(), Data::values_ten_thousand.end());
+	values.insert(values.end(), Data::values_ten_thousand.begin(), Data::values_ten_thousand.end());
+	values.insert(values.end(), Data::values_ten_thousand.begin(), Data::values_ten_thousand.end());
+	values.insert(values.end(), Data::values_ten_thousand.begin(), Data::values_ten_thousand.end());
+	values.insert(values.end(), Data::values_ten_thousand.begin(), Data::values_ten_thousand.end());
+	values.insert(values.end(), Data::values_ten_thousand.begin(), Data::values_ten_thousand.end());
+	values.insert(values.end(), Data::values_ten_thousand.begin(), Data::values_ten_thousand.end());
+	values.insert(values.end(), Data::values_ten_thousand.begin(), Data::values_ten_thousand.end());
+	values.insert(values.end(), Data::values_ten_thousand.begin(), Data::values_ten_thousand.end());
+	//cout << sizeof(vector<double>) + sizeof(double)*values.size() << "\n";
 	
-	string caching = ExtractionDelegate::doCache ? "activated" : "not active";
-	cout << "Starting feature extraction, caching " << caching << "\n";
+	for (int i = 0; i < 10; i++) {
+		ExtractionDelegate delegate;
+		delegate.fillHandlerMap();
+		ExtractionDelegate::doCache = false;
 
-	clock_t start, end;
-	start = clock();
-	map<string, double> results = delegate.extractAll(values);
-	end = clock();
+		string caching = ExtractionDelegate::doCache ? "activated" : "not active";
+		cout << "Starting feature extraction, caching " << caching << "\n";
 
-	for (auto single : results) {
-		cout << single.first << ": " << single.second << "\n";
+		clock_t start, end;
+		start = clock();
+		map<string, double> results = delegate.extractAll(values);
+		end = clock();
+
+		/*
+		for (auto single : results) {
+			cout << single.first << ": " << single.second << "\n";
+		}*/
+
+		cout << "Feature extraction finished, took: " << ((double)end - start) / CLOCKS_PER_SEC << "\n";
+		ExtractionDelegate::calculated.clear();
 	}
-
-	cout << "Feature extraction finished, took: " << ((double)end - start) / CLOCKS_PER_SEC << "\n";
 }
 
 

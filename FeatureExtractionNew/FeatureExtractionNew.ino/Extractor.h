@@ -7,11 +7,16 @@
 #include <vector>
 #include <algorithm>
 
+//#include <complex>
+
 namespace ex {
 
 	class Extractor
 	{
 	public:
+		//typedef std::complex<double> cd;
+		//const double PI = 3.1415926536;
+
 		double mean(std::vector<double>&);
 		double mean_abs_dev(std::vector<double>&, double);
 		double mean_geometric(std::vector<double>);
@@ -27,39 +32,43 @@ namespace ex {
 		double skewness(std::vector<double>&, double, double);
 		double zero_cross(std::vector<double>&);
 
-		/*double max(vector<double>);
-		double abs_max(vector<double>);
-		double min(vector<double>);
-		double last_location_of_max(vector<double>);
-		double last_location_of_min(vector<double>);
-		double first_location_of_max(vector<double>);
-		double first_location_of_min(vector<double>);
-		double mean_n_abs_max_values(vector<double>);
+		double max(std::vector<double>&);
+		double abs_max(std::vector<double>&);
+		double min(std::vector<double>&);
+		double last_location_of_max(std::vector<double>&, double);
+		double last_location_of_min(std::vector<double>&, double);
+		double first_location_of_max(std::vector<double>&, double);
+		double first_location_of_min(std::vector<double>&, double);
+		double mean_n_abs_max_values(std::vector<double>, int);
 
-		double mean_abs_change(vector<double>);
-		double mean_change(vector<double>);
-		double abs_sum_of_changes(vector<double>);
-		double change_quantile(vector<double>);
+		double mean_abs_change(std::vector<double>&);
+		double mean_change(std::vector<double>&);
+		double abs_sum_of_changes(std::vector<double>&);
+		double change_quantile(std::vector<double>, double, double, std::string);
 
-		double sum(vector<double>);
-		double range_count(vector<double>);
-		double non_zero_count(vector<double>);
-		double count_above(vector<double>);
-		double count_above_mean(vector<double>);
-		double count_below(vector<double>);
-		double count_below_mean(vector<double>);
-		double root_mean_square(vector<double>);
-		double quantile(vector<double>);
-		double interquartile_range(vector<double>);
-		double negative_turnings(vector<double>);
-		double positive_turnings(vector<double>);
+		double sum(std::vector<double>&);
+		double range_count(std::vector<double>&, double, double);
+		double non_zero_count(std::vector<double>&);
+		double count_above(std::vector<double>&, double);
+		double count_above_mean(std::vector<double>&, double);
+		double count_below(std::vector<double>&, double);
+		double count_below_mean(std::vector<double>&, double);
+		double root_mean_square(std::vector<double>&);
+		double quantile(std::vector<double>, double);
+		double interquartile_range(std::vector<double>&);
+		double negative_turnings(std::vector<double>&);
+		double positive_turnings(std::vector<double>&);
 
-		double autocorrelation(vector<double>, vector<double>);
-		double fft(vector<double>, vector<double>);
-		double lpc(vector<double>, vector<double>);
-		double lpcc(vector<double>, vector<double>);
-		double mfcc(vector<double>, vector<double>);*/
-
+		double autocorrelation(std::vector<double>&, int, double, double);
+		//std::vector<cd> fft(std::vector<double>&);
+		
+		/*
+		double lpc(std::vector<double>&, std::vector<double>&);
+		double lpcc(std::vector<double>&, std::vector<double>&);
+		double mfcc(std::vector<double>&, std::vector<double>&);*/
+	
+	private:
+		unsigned int bitReverse(unsigned int, int);
 	};
 
 }

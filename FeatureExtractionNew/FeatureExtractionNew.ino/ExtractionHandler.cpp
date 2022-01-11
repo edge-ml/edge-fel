@@ -7,8 +7,8 @@ using namespace std;
 
 Extractor extractor;
 
-//Handler function for mean
-double ExtractionHandler::handle_mean(string feature, vector<double> values) {
+//Handler function for mean, caches value
+double ExtractionHandler::handle_mean(string feature, vector<double>& values) {
 	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
 		return ExtractionDelegate::calculated.at(feature);
 	}
@@ -19,30 +19,18 @@ double ExtractionHandler::handle_mean(string feature, vector<double> values) {
 }
 
 //Handler function for mean_abs_dev
-double ExtractionHandler::handle_mean_abs_dev(string feature, vector<double> values) {
-	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
-		return ExtractionDelegate::calculated.at(feature);
-	}
-
+double ExtractionHandler::handle_mean_abs_dev(string feature, vector<double>& values) {
 	double mean = handle_mean("mean", values);
-	double value = extractor.mean_abs_dev(values, mean);
-	ExtractionDelegate::checkAndInsert(feature, value);
-	return value;
+	return extractor.mean_abs_dev(values, mean);
 }
 
 //Handler function for mean_geometric
-double ExtractionHandler::handle_mean_geometric(string feature, vector<double> values) {
-	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
-		return ExtractionDelegate::calculated.at(feature);
-	}
-
-	double value = extractor.mean_geometric(values);
-	ExtractionDelegate::checkAndInsert(feature, value);
-	return value;
+double ExtractionHandler::handle_mean_geometric(string feature, vector<double>& values) {
+	return extractor.mean_geometric(values);
 }
 
-//Handler function for median
-double ExtractionHandler::handle_median(string feature, vector<double> values) {
+//Handler function for median, caches value
+double ExtractionHandler::handle_median(string feature, vector<double>& values) {
 	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
 		return ExtractionDelegate::calculated.at(feature);
 	}
@@ -53,41 +41,23 @@ double ExtractionHandler::handle_median(string feature, vector<double> values) {
 }
 
 //Handler function for median_abs_diff
-double ExtractionHandler::handle_median_abs_diff(string feature, vector<double> values) {
-	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
-		return ExtractionDelegate::calculated.at(feature);
-	}
-
-	double value = extractor.median_abs_diff(values);
-	ExtractionDelegate::checkAndInsert(feature, value);
-	return value;
+double ExtractionHandler::handle_median_abs_diff(string feature, vector<double>& values) {
+	return extractor.median_abs_diff(values);
 }
 
 //Handler function for median_diff
-double ExtractionHandler::handle_median_diff(string feature, vector<double> values) {
-	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
-		return ExtractionDelegate::calculated.at(feature);
-	}
-
-	double value = extractor.median_diff(values);
-	ExtractionDelegate::checkAndInsert(feature, value);
-	return value;
+double ExtractionHandler::handle_median_diff(string feature, vector<double>& values) {
+	return extractor.median_diff(values);
 }
 
 //Handler function for median_abs_dev, calls handle_median
-double ExtractionHandler::handle_median_abs_dev(string feature, vector<double> values) {
-	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
-		return ExtractionDelegate::calculated.at(feature);
-	}
-
+double ExtractionHandler::handle_median_abs_dev(string feature, vector<double>& values) {
 	double median = handle_median("median", values);
-	double value = extractor.median_abs_dev(values, median);
-	ExtractionDelegate::checkAndInsert(feature, value);
-	return value;
+	return extractor.median_abs_dev(values, median);
 }
 
-//Handler function for std_dev, calls handle_var
-double ExtractionHandler::handle_std_dev(string feature, vector<double> values) {
+//Handler function for std_dev, calls handle_var, caches value
+double ExtractionHandler::handle_std_dev(string feature, vector<double>& values) {
 	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
 		return ExtractionDelegate::calculated.at(feature);
 	}
@@ -99,19 +69,13 @@ double ExtractionHandler::handle_std_dev(string feature, vector<double> values) 
 }
 
 //Handler function for avg_dev, calls handle_mean
-double ExtractionHandler::handle_avg_dev(string feature, vector<double> values) {
-	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
-		return ExtractionDelegate::calculated.at(feature);
-	}
-
+double ExtractionHandler::handle_avg_dev(string feature, vector<double>& values) {
 	double mean = handle_mean("mean", values);
-	double value = extractor.avg_dev(values, mean);
-	ExtractionDelegate::checkAndInsert(feature, value);
-	return value;
+	return extractor.avg_dev(values, mean);
 }
 
-//Handler function for var, calls handle_mean
-double ExtractionHandler::handle_var(string feature, vector<double> values) {
+//Handler function for var, calls handle_mean, caches value
+double ExtractionHandler::handle_var(string feature, vector<double>& values) {
 	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
 		return ExtractionDelegate::calculated.at(feature);
 	}
@@ -123,50 +87,224 @@ double ExtractionHandler::handle_var(string feature, vector<double> values) {
 }
 
 //Handler function for abs_energy
-double ExtractionHandler::handle_abs_energy(string feature, vector<double> values) {
-	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
-		return ExtractionDelegate::calculated.at(feature);
-	}
-
-	double value = extractor.abs_energy(values);
-	ExtractionDelegate::checkAndInsert(feature, value);
-	return value;
+double ExtractionHandler::handle_abs_energy(string feature, vector<double>& values) {
+	return extractor.abs_energy(values);
 }
 
 //Handler function for kurtosis, calls handle_mean and handle_std_dev
-double ExtractionHandler::handle_kurtosis(string feature, vector<double> values) {
-	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
-		return ExtractionDelegate::calculated.at(feature);
-	}
-
+double ExtractionHandler::handle_kurtosis(string feature, vector<double>& values) {
 	double mean = handle_mean("mean", values);
 	double std_dev = handle_std_dev("std_dev", values);
-	double value = extractor.kurtosis(values, mean, std_dev);
-	ExtractionDelegate::checkAndInsert(feature, value);
-	return value;
+	return extractor.kurtosis(values, mean, std_dev);
 }
 
 //Handler function for skewness, calls handle_mean and handle_std_dev
-double ExtractionHandler::handle_skewness(string feature, vector<double> values) {
+double ExtractionHandler::handle_skewness(string feature, vector<double>& values) {
+	double mean = handle_mean("mean", values);
+	double std_dev = handle_std_dev("std_dev", values);
+	return extractor.skewness(values, mean, std_dev);
+}
+
+//Handler function for zero_cross
+double ExtractionHandler::handle_zero_cross(string feature, vector<double>& values) {
+	return extractor.zero_cross(values);
+}
+
+//Handler function for max, caches value
+double ExtractionHandler::handle_max(string feature, vector<double>& values) {
+	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
+		return ExtractionDelegate::calculated.at(feature);
+	}
+
+	double value = extractor.max(values);
+	ExtractionDelegate::checkAndInsert(feature, value);
+	return value;
+}
+
+//Handler function for abs_max
+double ExtractionHandler::handle_abs_max(string feature, vector<double>& values) {
+	return extractor.abs_max(values);
+}
+
+//Handler function for min, caches value
+double ExtractionHandler::handle_min(string feature, vector<double>& values) {
+	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
+		return ExtractionDelegate::calculated.at(feature);
+	}
+
+	double value = extractor.min(values);
+	ExtractionDelegate::checkAndInsert(feature, value);
+	return value;
+}
+
+//Handler function for last location of maximum, calls handle_max
+double ExtractionHandler::handle_last_location_of_max(string feature, vector<double>& values) {
+	double max = handle_max("max", values);
+	return extractor.last_location_of_max(values, max);
+}
+
+//Handler function for last location of minimum, calls handle_min
+double ExtractionHandler::handle_last_location_of_min(string feature, vector<double>& values) {
+	double min = handle_min("min", values);
+	return extractor.last_location_of_min(values, min);
+}
+
+//Handler function for first location of maximum, calls handle_max
+double ExtractionHandler::handle_first_location_of_max(string feature, vector<double>& values) {
+	double max = handle_max("max", values);
+	return extractor.first_location_of_max(values, max);
+}
+
+//Handler function for first location of minimum, calls handle_min
+double ExtractionHandler::handle_first_location_of_min(string feature, vector<double>& values) {
+	double min = handle_min("min", values);
+	return extractor.first_location_of_min(values, min);
+}
+/*
+//Handler function for mean_n_abs_max, takes n as input
+double ExtractionHandler::handle_mean_n_abs_max(string feature, vector<double>& values, int n) {
+	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
+		return ExtractionDelegate::calculated.at(feature);
+	}
+
+	double value = extractor.mean_n_abs_max_values(values, n);
+	ExtractionDelegate::checkAndInsert(feature, value);
+	return value;
+}*/
+
+//Handler function for mean_abs_change
+double ExtractionHandler::handle_mean_abs_change(string feature, vector<double>& values) {
+	return extractor.mean_abs_change(values);
+}
+
+//Handler function for mean_change
+double ExtractionHandler::handle_mean_change(string feature, vector<double>& values) {
+	return extractor.mean_change(values);
+}
+
+//Handler function for abs_sum_of_changes
+double ExtractionHandler::handle_abs_sum_of_changes(string feature, vector<double>& values) {
+	return extractor.abs_sum_of_changes(values);
+}
+
+/*
+//Handler function for change_quantiles, takes lower and upper quantile and a aggregation function as input
+double ExtractionHandler::handle_change_quantile(string feature, vector<double>& values, double lower, double upper, string aggr) {
+	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
+		return ExtractionDelegate::calculated.at(feature);
+	}
+
+	double value = extractor.change_quantile(values, lower, upper, aggr);
+	ExtractionDelegate::checkAndInsert(feature, value);
+	return value;
+}*/
+
+//Handler function for sum, caches value
+double ExtractionHandler::handle_sum(string feature, vector<double>& values) {
+	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
+		return ExtractionDelegate::calculated.at(feature);
+	}
+
+	double value = extractor.sum(values);
+	ExtractionDelegate::checkAndInsert(feature, value);
+	return value;
+}
+/*
+//Handler function for range_count, takes lower and upper bound for values as input
+double ExtractionHandler::handle_range_count(string feature, vector<double>& values, double lower, double upper) {
+	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
+		return ExtractionDelegate::calculated.at(feature);
+	}
+
+	double value = extractor.range_count(values, lower, upper);
+	ExtractionDelegate::checkAndInsert(feature, value);
+	return value;
+}*/
+
+//Handler function for non_zero_count
+double ExtractionHandler::handle_non_zero_count(string feature, vector<double>& values) {
+	return extractor.non_zero_count(values);
+}
+/*
+//Handler function for count_above, takes lower bound x as input
+double ExtractionHandler::handle_count_above(string feature, vector<double>& values, double x) {
+	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
+		return ExtractionDelegate::calculated.at(feature);
+	}
+
+	double value = extractor.count_above(values, x);
+	ExtractionDelegate::checkAndInsert(feature, value);
+	return value;
+}*/
+
+//Handler function for count_above_mean, calls handle_mean
+double ExtractionHandler::handle_count_above_mean(string feature, vector<double>& values) {
+	double mean = handle_mean("mean", values);
+	return extractor.count_above(values, mean);
+}
+/*
+//Handler function for count_below, takes upper bound x as input
+double ExtractionHandler::handle_count_below(string feature, vector<double>& values, double x) {
+	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
+		return ExtractionDelegate::calculated.at(feature);
+	}
+
+	double value = extractor.count_below(values, x);
+	ExtractionDelegate::checkAndInsert(feature, value);
+	return value;
+}*/
+
+//Handler function for count_below_mean, calls handle_mean
+double ExtractionHandler::handle_count_below_mean(string feature, vector<double>& values) {
+	double mean = handle_mean("mean", values);
+	return extractor.count_below_mean(values, mean);
+}
+
+//Handler function for root_mean_square
+double ExtractionHandler::handle_root_mean_square(string feature, vector<double>& values) {
+	return extractor.root_mean_square(values);
+}
+/*
+//Handler function for quantiles, takes the quantile 0 <= q <= 1 as parameter
+double ExtractionHandler::handle_quantile(string feature, vector<double>& values, double q) {
+	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
+		return ExtractionDelegate::calculated.at(feature);
+	}
+
+	double value = extractor.quantile(values, q);
+	ExtractionDelegate::checkAndInsert(feature, value);
+	return value;
+}*/
+
+//Handler function for interquartile_range
+double ExtractionHandler::handle_interquartile_range(string feature, vector<double>& values) {
+	return extractor.interquartile_range(values);
+}
+
+//Handler function for negative_turnings
+double ExtractionHandler::handle_negative_turnings(string feature, vector<double>& values) {
+	return extractor.negative_turnings(values);
+}
+
+//Handler function for positive_turnings
+double ExtractionHandler::handle_positive_turnings(string feature, vector<double>& values) {
+	return extractor.positive_turnings(values);
+}
+/*
+//Handler function for autocorrelation, takes the lag as input and calls handle_mean and handle_var
+double ExtractionHandler::handle_autocorrelation(string feature, vector<double>& values, int lag) {
 	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
 		return ExtractionDelegate::calculated.at(feature);
 	}
 
 	double mean = handle_mean("mean", values);
-	double std_dev = handle_std_dev("std_dev", values);
-	double value = extractor.skewness(values, mean, std_dev);
+	double var = handle_var("var", values);
+	double value = extractor.autocorrelation(values, lag, mean, var);
 	ExtractionDelegate::checkAndInsert(feature, value);
 	return value;
 }
 
-//Handler function for zero_cross
-double ExtractionHandler::handle_zero_cross(string feature, vector<double> values) {
-	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
-		return ExtractionDelegate::calculated.at(feature);
-	}
-
-	double value = extractor.zero_cross(values);
-	ExtractionDelegate::checkAndInsert(feature, value);
-	return value;
-}
-
+//Handler function for fft, returns a vector of imaginary doubles
+vector<Extractor::cd> ExtractionHandler::handle_fft(string feature, vector<double>& values) {
+	return extractor.fft(values);
+}*/
