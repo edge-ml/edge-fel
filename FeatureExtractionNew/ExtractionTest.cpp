@@ -38,7 +38,7 @@ int testExtractAll(vector<double> values, map<string, double> featuresAndResults
 
 	return 0;
 }
-/*
+
 int testExtractSpectrum(vector<double> values, vector<Extractor::cd> coefficients) {
 	ExtractionDelegate delegate;
 	delegate.fillHandlerMap();
@@ -50,4 +50,4 @@ int testExtractSpectrum(vector<double> values, vector<Extractor::cd> coefficient
 	}
 
 	return 0;
-}*/
+}

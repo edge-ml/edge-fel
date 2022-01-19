@@ -293,6 +293,7 @@ double Extractor::abs_sum_of_changes(vector<double>& values) {
 
 //Calculates the absolute differences of all values between the two quantiles and applies the aggregation function
 double Extractor::change_quantile(vector<double> values, double lower, double upper, string aggr) {
+	cout << "hh";
 	sort(values.begin(), values.end());
  
 	for (size_t i = lower; i <= upper; i++) {
@@ -300,7 +301,10 @@ double Extractor::change_quantile(vector<double> values, double lower, double up
 		values.at(i) = diff;
 	}
 
-	if (aggr == "mean") {
+	if (aggr == "sum") {
+		return sum(values);
+	} 
+	else if (aggr == "mean") {
 		return mean(values);
 	}
 	else if (aggr == "median") {
@@ -442,7 +446,7 @@ double Extractor::autocorrelation(vector<double>& values, int lag, double mean, 
 	return corr;
 }
 
-/*
+
 //https://www.geeksforgeeks.org/iterative-fast-fourier-transformation-polynomial-multiplication/
 vector<Extractor::cd> Extractor::fft(std::vector<cd>& values_imag) {
 	int n = values_imag.size();
@@ -496,8 +500,7 @@ vector<Extractor::cd> Extractor::fft(std::vector<cd>& values_imag) {
 }
 
 // Utility function for reversing the bits of given index x
-unsigned int Extractor::bitReverse(unsigned int x, int log2n)
-{
+unsigned int Extractor::bitReverse(unsigned int x, int log2n) {
 	int n = 0;
 	for (int i = 0; i < log2n; i++)
 	{
@@ -506,5 +509,61 @@ unsigned int Extractor::bitReverse(unsigned int x, int log2n)
 		x >>= 1;
 	}
 	return n;
-}*/
+}
+
+//Calculates n lpc coefficients
+vector<double> Extractor::lpc(vector<double>& autoc, int n) {
+	vector<double> lpc(n - 1, 0);
+	double error = autoc[0];
+	if (error == 0.0) {
+		return lpc;
+	}
+
+	for (int i = 0; i < n - 1; i++) {
+		/* Sum up this iteration's reflection coefficient. */
+		double r = -autoc[i + 1];
+		for (int j = 0; j < i; j++) {
+			r -= lpc[j] * autoc[i - j];
+		}
+		r /= error;
+
+		/* Update LPC coefficients and total error. */
+		lpc[i] = r;
+		int j;
+		for (j = 0; j < i / 2; j++)
+		{
+			double tmp = lpc[j];
+			lpc[j] = r * lpc[i - 1 - j];
+			lpc[i - 1 - j] += r * tmp;
+		}
+		if (i % 2) {
+			lpc[j] += lpc[j] * r;
+		}
+		error *= 1 - r * r;
+	}
+	return lpc;
+}
+
+vector<double> Extractor::lpcc(vector<double>& lpc_coeffs, int cep_length) {
+	int order = lpc_coeffs.size() - 1; /* Eventually change this to Q = 3/2 p as suggested in Rabiner */
+	vector<double> lpcc(cep_length, 0);
+
+	for (int n = 1; n <= order && n <= cep_length; n++) {
+		double sum = 0.0;
+		for (int k = 1; k < n; k++) {
+			sum += k * lpcc[k - 1] * lpc_coeffs[n - k];
+		}
+		lpcc[n - 1] = lpc_coeffs[n] + sum / n;
+	}
+
+	/* be wary of these interpolated values */
+	for (int n = order + 1; n <= cep_length; n++) {
+		double sum = 0.0;
+		for (int k = n - (order - 1); k < n; k++)
+			sum += k * lpcc[k - 1] * lpc_coeffs[n - k];
+		lpcc[n - 1] = sum / n;
+	}
+
+	return lpcc;
+}
 

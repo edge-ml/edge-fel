@@ -262,7 +262,7 @@ double ExtractionHandler::handle_autocorrelation(string feature, vector<double>&
 	return extractor.autocorrelation(values, lag, mean, var);
 }
 
-/*
+
 //Handler function for mfcc, takes samplingRate, numFilters and the coefficient number as parameter, calls handle_fft and transform result to real numbers
 double ExtractionHandler::handle_mfcc(string feature, vector<double>& values, double sampling_rate, double num_filter, double m) {
 	vector<Extractor::cd> spectralData = handle_fft("fft", values);
@@ -286,4 +286,30 @@ vector<Extractor::cd> ExtractionHandler::handle_fft(string feature, vector<doubl
 	}
 
 	return extractor.fft(values_imag);
-}*/
+}
+
+//Handler function for lpc, creates a vector of n autocorrelations, takes amount of autocorrelations n as param
+vector<double> ExtractionHandler::handle_lpc(string feature, vector<double>& values, double auto_n, double lpc_n) {
+	int m = auto_n;
+	vector<double> autoc;
+	autoc.reserve(auto_n);
+
+	while (m--)
+	{
+		double corr = 0;
+		for (int i = 0; i < auto_n - m; i++)
+		{
+			corr += values[i] * values[i + m];
+		}
+		autoc.insert(autoc.begin(), corr/ auto_n);
+	}
+	
+	return extractor.lpc(autoc, lpc_n);
+}
+
+
+//Handler function for lpcc, calls lcp, takes length of cepstrum as additional param
+vector<double> ExtractionHandler::handle_lpcc(string feature, vector<double>& values, double auto_n, double lpc_n, double cep_length) {
+	vector<double> lpc_coeffs = handle_lpc("lpc", values, auto_n, lpc_n);
+	return extractor.lpcc(lpc_coeffs, cep_length);
+}

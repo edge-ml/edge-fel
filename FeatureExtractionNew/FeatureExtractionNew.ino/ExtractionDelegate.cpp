@@ -10,7 +10,7 @@ ExtractionDelegate::handler_map ExtractionDelegate::handlers;
 ExtractionHandler handler;
 vector<string> ExtractionDelegate::parameterFeatures = {"mean_n_abs_max",  "change_quantile", "range_count", "count_above", "count_below", "quantile", "autocorrelation", "mfcc" };
 
-//Extracts the requested feature from the data
+//Extracts the requested feature from the data, doesnt include features which return a list
 double ExtractionDelegate::extractOne(string feature, vector<double>& values, map<string, double>& params) {
 		if (feature == "mean_n_abs_max") {
 			return handler.handle_mean_n_abs_max(feature, values, params.at("mean_n_abs_max_n"));
@@ -34,7 +34,7 @@ double ExtractionDelegate::extractOne(string feature, vector<double>& values, ma
 			return handler.handle_autocorrelation(feature, values, params.at("autocorrelation_lag"));
 		}
 		else if (feature == "mfcc") {
-			//return handler.handle_mfcc("mfcc", values, params.at("mfcc_sampling_rate"), params.at("mfcc_num_filter"), params.at("mfcc_m"));
+			return handler.handle_mfcc("mfcc", values, params.at("mfcc_sampling_rate"), params.at("mfcc_num_filter"), params.at("mfcc_m"));
 		}
 		else {
 			auto iter = ExtractionDelegate::handlers.find(feature);
@@ -46,7 +46,7 @@ double ExtractionDelegate::extractOne(string feature, vector<double>& values, ma
 	
 }
 
-//Extracts the requested features from the data
+//Extracts the requested features from the data, doesnt include features which return a list
 map<string, double> ExtractionDelegate::extractSome(vector<string>& features, vector<double>& values, map<string, double>& params) {
 	map<string, double> results;
 	for (string feature : features) {
@@ -57,7 +57,7 @@ map<string, double> ExtractionDelegate::extractSome(vector<string>& features, ve
 	return results;
 }
 
-//Extracts all available features from the data
+//Extracts all available features from the data, doesnt include features which return a list
 map<string, double> ExtractionDelegate::extractAll(vector<double>& values, map<string, double>& params) {
 	map<string, double> results;
 	for (auto iter : ExtractionDelegate::handlers) {
@@ -68,12 +68,21 @@ map<string, double> ExtractionDelegate::extractAll(vector<double>& values, map<s
 	results.insert(parameterFeatures.begin(), parameterFeatures.end());
 	return results;
 }
-/*
+
 //Extracts the spectrum of the times series with fft
 vector<ex::Extractor::cd> ExtractionDelegate::extractSpectrum(vector<double>& values) {
 	return handler.handle_fft("fft", values);
-}*/
+}
 
+//Extracts n lpc coefficients
+vector<double> ExtractionDelegate::extractLpc(vector<double>& values, double auto_n, double lpc_n) {
+	return handler.handle_lpc("lpc", values, auto_n, lpc_n);
+}
+
+//Extracts n lpc cepstrum coefficients
+vector<double> ExtractionDelegate::extractLpcc(vector<double>& values, double auto_n, double lpc_n, double cep_length) {
+	return handler.handle_lpcc("lpc", values, auto_n, lpc_n, cep_length);
+}
 
 //Helper method for fail-fast cache check and insertion
 void ExtractionDelegate::checkAndInsert(string feature, double value) {

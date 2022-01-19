@@ -7,7 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include "libmfcc.h"
-//#include <complex>
+#include <complex>
 
 namespace ex {
 
@@ -15,7 +15,7 @@ namespace ex {
 	{
 	public:
 
-		//typedef std::complex<double> cd;
+		typedef std::complex<double> cd;
 
 		double mean(std::vector<double>&);
 		double mean_abs_dev(std::vector<double>&, double);
@@ -61,7 +61,10 @@ namespace ex {
 
 		double autocorrelation(std::vector<double>&, int, double, double);
 		double mfcc(std::vector<double>&, int, int, int);
-		//std::vector<cd> fft(std::vector<cd>&);
+		std::vector<cd> fft(std::vector<cd>&);
+		std::vector<double> lpc(std::vector<double>&, int);
+		std::vector<double> lpcc(std::vector<double>&, int);
+		
 	
 	private:
 		unsigned int bitReverse(unsigned int, int);

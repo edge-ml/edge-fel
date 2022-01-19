@@ -57,13 +57,10 @@ namespace eh {
 
 		double handle_autocorrelation(std::string, std::vector<double>&, double);
 		double handle_mfcc(std::string, std::vector<double>&, double, double, double);
-		//std::vector<ex::Extractor::cd> handle_fft(std::string, std::vector<double>&);
+		std::vector<ex::Extractor::cd> handle_fft(std::string, std::vector<double>&);
+		std::vector<double> handle_lpc(std::string, std::vector<double>&, double, double);
+		std::vector<double> handle_lpcc(std::string, std::vector<double>&, double, double, double);
 
-		/*
-		double handle_lpc(std::string, std::vector<double>&);
-		double handle_lpcc(std::string, std::vector<double>&);
-		
-		*/
 	};
 
 }

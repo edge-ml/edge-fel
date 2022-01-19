@@ -15,7 +15,7 @@ int testExtractSome(std::vector<double>, std::map<std::string, double>);
 
 int testExtractAll(std::vector<double>, std::map<std::string, double>);
 
-//int testExtractSpectrum(std::vector<double>, std::vector<ex::Extractor::cd>);
+int testExtractSpectrum(std::vector<double>, std::vector<ex::Extractor::cd>);
 
 
 #endif

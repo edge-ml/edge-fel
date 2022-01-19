@@ -33,30 +33,15 @@ map<string, double> featuresAndResults10 = { {"mean", 0.3} , {"mean_abs_dev", 1.
 	{"positive_turnings", 2}, {"autocorrelation",  0.0322359}, {"mean_geometric_abs", 1.75677 }, {"avg_dev", 1.9 }, {"non_zero_count", 9}, {"count_above", 0.5 }, {"count_below", 0.4} };
 
 int main() {
-	
-	/*Extractor ex;
-	vector<double> values = { 1,2,3,4 };
-	vector<Extractor::cd> spectrum; 
-	complex<double> first(10, 0.0);
-	spectrum.push_back(first);
-	complex<double> second(-2.0, 2.0);
-	spectrum.push_back(second);
-	complex<double> third(-2.0, 0.0);
-	spectrum.push_back(third);
-	complex<double> fourth(-2.0, -2.0);
-	spectrum.push_back(fourth);
-
-	testExtractSpectrum(values, spectrum);*/
-	
 		
 	//testExtractAll(Data::values_ten, featuresAndResults10);
 	//testExtractOne(Data::values_ten, featuresAndResults10);
 
 	
-	vector<double> values = Data::values_hundred;
+	vector<double> values = Data::values_thousand;
 	ExtractionDelegate delegate;
 	delegate.fillHandlerMap();
-	ExtractionDelegate::doCache = false;
+	ExtractionDelegate::doCache = true;
 
 	map<string, double> params = { {"mean_n_abs_max_n", 8}, {"change_quantile_lower", 0.1}, {"change_quantile_upper", 0.1},  {"range_count_lower",-1},
 		{"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1}, {"mfcc_sampling_rate", 100}, 
@@ -68,15 +53,21 @@ int main() {
 	clock_t start, end;
 	start = clock();
 	map<string, double> results = delegate.extractAll(values, params);
+	vector<Extractor::cd> spectrum = delegate.extractSpectrum(values);
+	vector<double> lpc = delegate.extractLpc(values, values.size(), values.size());
+	vector<double> lpcc = delegate.extractLpcc(values, values.size(), values.size(), values.size());
 	end = clock();
 
 	for (auto single : results) {
 		cout << single.first << ": " << single.second << "\n";
 	}
+	cout << "spectrum[0] :" << spectrum[0] << "\n";
+	cout << "lpc[0] : " << lpc[0] << "\n";
+	cout << "lpcc[0] : " << lpcc[0] << "\n";
 
 	cout << "Feature extraction finished, took: " << ((double)end - start) / CLOCKS_PER_SEC << "\n";
 	ExtractionDelegate::calculated.clear();
-
+	
 }
 
 
