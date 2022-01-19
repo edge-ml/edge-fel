@@ -15,7 +15,7 @@ namespace eh {
 		
 		double handle_mean(std::string, std::vector<double>&);
 		double handle_mean_abs_dev(std::string, std::vector<double>&);
-		double handle_mean_geometric(std::string, std::vector<double>&);
+		double handle_mean_geometric_abs(std::string, std::vector<double>&);
 		double handle_median(std::string, std::vector<double>&);
 		double handle_median_abs_diff(std::string, std::vector<double>&);
 		double handle_median_diff(std::string, std::vector<double>&);
@@ -56,12 +56,13 @@ namespace eh {
 		double handle_positive_turnings(std::string, std::vector<double>&);
 
 		double handle_autocorrelation(std::string, std::vector<double>&, double);
-		
+		double handle_mfcc(std::string, std::vector<double>&, double, double, double);
 		//std::vector<ex::Extractor::cd> handle_fft(std::string, std::vector<double>&);
+
 		/*
 		double handle_lpc(std::string, std::vector<double>&);
 		double handle_lpcc(std::string, std::vector<double>&);
-		double handle_mfcc(std::string, std::vector<double>&);
+		
 		*/
 	};
 

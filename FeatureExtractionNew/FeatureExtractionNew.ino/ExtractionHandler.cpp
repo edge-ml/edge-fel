@@ -24,9 +24,9 @@ double ExtractionHandler::handle_mean_abs_dev(string feature, vector<double>& va
 	return extractor.mean_abs_dev(values, mean);
 }
 
-//Handler function for mean_geometric
-double ExtractionHandler::handle_mean_geometric(string feature, vector<double>& values) {
-	return extractor.mean_geometric(values);
+//Handler function for mean_geometric_abs
+double ExtractionHandler::handle_mean_geometric_abs(string feature, vector<double>& values) {
+	return extractor.mean_geometric_abs(values);
 }
 
 //Handler function for median, caches value
@@ -163,7 +163,7 @@ double ExtractionHandler::handle_first_location_of_min(string feature, vector<do
 
 //Handler function for mean_n_abs_max, takes n as input
 double ExtractionHandler::handle_mean_n_abs_max(string feature, vector<double>& values, double n) {
-	return extractor.mean_n_abs_max_values(values, n);
+	return extractor.mean_n_abs_max(values, n);
 }
 
 //Handler function for mean_abs_change
@@ -263,7 +263,27 @@ double ExtractionHandler::handle_autocorrelation(string feature, vector<double>&
 }
 
 /*
-//Handler function for fft, returns a vector of imaginary doubles
+//Handler function for mfcc, takes samplingRate, numFilters and the coefficient number as parameter, calls handle_fft and transform result to real numbers
+double ExtractionHandler::handle_mfcc(string feature, vector<double>& values, double sampling_rate, double num_filter, double m) {
+	vector<Extractor::cd> spectralData = handle_fft("fft", values);
+	vector<double> spectralDataReal;
+	spectralDataReal.reserve(spectralData.size());
+	for (Extractor::cd& c : spectralData) {
+		double realValue = sqrt(pow(c.imag(), 2) + pow(c.real(), 2));
+		spectralDataReal.push_back(realValue);
+	}
+	return extractor.mfcc(spectralDataReal, sampling_rate, num_filter, m);
+}
+
+
+//Handler function for fft, transforms vector into imaginary numbers and returns a vector of imaginary doubles
 vector<Extractor::cd> ExtractionHandler::handle_fft(string feature, vector<double>& values) {
-	return extractor.fft(values);
+	vector<Extractor::cd> values_imag;
+	values_imag.reserve(values.size());
+	for (double value : values) {
+		Extractor::cd imag(value, 0.0);
+		values_imag.push_back(imag);
+	}
+
+	return extractor.fft(values_imag);
 }*/

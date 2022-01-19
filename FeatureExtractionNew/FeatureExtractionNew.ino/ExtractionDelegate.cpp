@@ -8,11 +8,10 @@ bool ExtractionDelegate::doCache = false;
 map<string, double> ExtractionDelegate::calculated;
 ExtractionDelegate::handler_map ExtractionDelegate::handlers;
 ExtractionHandler handler;
-vector<string> ExtractionDelegate::parameterFeatures = {"mean_n_abs_max",  "change_quantile", "range_count", "count_above", "count_below", "quantile", "autocorrelation" };
+vector<string> ExtractionDelegate::parameterFeatures = {"mean_n_abs_max",  "change_quantile", "range_count", "count_above", "count_below", "quantile", "autocorrelation", "mfcc" };
 
 //Extracts the requested feature from the data
 double ExtractionDelegate::extractOne(string feature, vector<double>& values, map<string, double>& params) {
-	if (params.size() > 0) {
 		if (feature == "mean_n_abs_max") {
 			return handler.handle_mean_n_abs_max(feature, values, params.at("mean_n_abs_max_n"));
 		}
@@ -26,7 +25,7 @@ double ExtractionDelegate::extractOne(string feature, vector<double>& values, ma
 			return handler.handle_count_above(feature, values, params.at("count_above_x"));
 		}
 		else if (feature == "count_below") {
-			return handler.handle_count_above(feature, values, params.at("count_below_x"));
+			return handler.handle_count_below(feature, values, params.at("count_below_x"));
 		}
 		else if (feature == "quantile") {
 			return handler.handle_quantile(feature, values, params.at("quantile_q"));
@@ -34,19 +33,17 @@ double ExtractionDelegate::extractOne(string feature, vector<double>& values, ma
 		else if (feature == "autocorrelation") {
 			return handler.handle_autocorrelation(feature, values, params.at("autocorrelation_lag"));
 		}
+		else if (feature == "mfcc") {
+			//return handler.handle_mfcc("mfcc", values, params.at("mfcc_sampling_rate"), params.at("mfcc_num_filter"), params.at("mfcc_m"));
+		}
 		else {
+			auto iter = ExtractionDelegate::handlers.find(feature);
+			if (!(iter == ExtractionDelegate::handlers.end())) {
+				return (handler.*(iter->second))(feature, values);
+			}
 			return 0.0;
 		}
-	}
-	else {
-		auto iter = ExtractionDelegate::handlers.find(feature);
-		if (!(iter == ExtractionDelegate::handlers.end())) {
-			return (handler.*(iter->second))(feature, values);
-		}
-	}
-
-
-	return 0.0;
+	
 }
 
 //Extracts the requested features from the data
@@ -56,7 +53,7 @@ map<string, double> ExtractionDelegate::extractSome(vector<string>& features, ve
 		double value = extractOne(feature, values, params);
 		results.emplace(feature, value);
 	}
-
+    
 	return results;
 }
 
@@ -67,11 +64,15 @@ map<string, double> ExtractionDelegate::extractAll(vector<double>& values, map<s
 		double value = (handler.*(iter.second))(iter.first, values);
 		results.emplace(iter.first, value);
 	}
-
 	map<string, double> parameterFeatures = extractSome(ExtractionDelegate::parameterFeatures, values, params);
 	results.insert(parameterFeatures.begin(), parameterFeatures.end());
 	return results;
 }
+/*
+//Extracts the spectrum of the times series with fft
+vector<ex::Extractor::cd> ExtractionDelegate::extractSpectrum(vector<double>& values) {
+	return handler.handle_fft("fft", values);
+}*/
 
 
 //Helper method for fail-fast cache check and insertion
@@ -85,7 +86,7 @@ void ExtractionDelegate::checkAndInsert(string feature, double value) {
 void ExtractionDelegate::fillHandlerMap() {
 	ExtractionDelegate::handlers.emplace("mean", &ExtractionHandler::handle_mean);
 	ExtractionDelegate::handlers.emplace("mean_abs_dev", &ExtractionHandler::handle_mean_abs_dev);
-	ExtractionDelegate::handlers.emplace("mean_geometric", &ExtractionHandler::handle_mean_geometric);
+	ExtractionDelegate::handlers.emplace("mean_geometric_abs", &ExtractionHandler::handle_mean_geometric_abs);
 	ExtractionDelegate::handlers.emplace("median", &ExtractionHandler::handle_median);
 	ExtractionDelegate::handlers.emplace("median_abs_diff", &ExtractionHandler::handle_median_abs_diff);
 	ExtractionDelegate::handlers.emplace("median_diff", &ExtractionHandler::handle_median_diff);
@@ -105,36 +106,18 @@ void ExtractionDelegate::fillHandlerMap() {
 	ExtractionDelegate::handlers.emplace("last_location_of_min", &ExtractionHandler::handle_last_location_of_min);
 	ExtractionDelegate::handlers.emplace("first_location_of_max", &ExtractionHandler::handle_first_location_of_max);
 	ExtractionDelegate::handlers.emplace("first_location_of_min", &ExtractionHandler::handle_first_location_of_min);
-	//ExtractionDelegate::handlers.emplace("mean_n_abs_max_values", &ExtractionHandler::handle_mean_n_abs_max);
 
 	ExtractionDelegate::handlers.emplace("mean_abs_change", &ExtractionHandler::handle_mean_abs_change);
 	ExtractionDelegate::handlers.emplace("mean_change", &ExtractionHandler::handle_mean_change);
 	ExtractionDelegate::handlers.emplace("abs_sum_of_changes", &ExtractionHandler::handle_abs_sum_of_changes);
-	//ExtractionDelegate::handlers.emplace("change_quantile", &ExtractionHandler::handle_change_quantile);
 
 	ExtractionDelegate::handlers.emplace("sum", &ExtractionHandler::handle_sum);
-	//ExtractionDelegate::handlers.emplace("range_count", &ExtractionHandler::handle_range_count);
 	ExtractionDelegate::handlers.emplace("non_zero_count", &ExtractionHandler::handle_non_zero_count);
-	//ExtractionDelegate::handlers.emplace("count_above", &ExtractionHandler::handle_count_above);
 	ExtractionDelegate::handlers.emplace("count_above_mean", &ExtractionHandler::handle_count_above_mean);
-	//ExtractionDelegate::handlers.emplace("count_below", &ExtractionHandler::handle_count_below);
 	ExtractionDelegate::handlers.emplace("count_below_mean", &ExtractionHandler::handle_count_below_mean);
 	ExtractionDelegate::handlers.emplace("root_mean_square", &ExtractionHandler::handle_root_mean_square);
-	//ExtractionDelegate::handlers.emplace("quantile", &ExtractionHandler::handle_quantile);
 	ExtractionDelegate::handlers.emplace("interquartile_range", &ExtractionHandler::handle_interquartile_range);
 	ExtractionDelegate::handlers.emplace("negative_turnings", &ExtractionHandler::handle_negative_turnings);
 	ExtractionDelegate::handlers.emplace("positive_turnings", &ExtractionHandler::handle_positive_turnings);
-
-	//ExtractionDelegate::handlers.emplace("autocorrelation", &ExtractionHandler::handle_autocorrelation);
 	
 }
-
-/*
-case "fft": return handler.handle_fft(feature, values);
-case "lpc": return handler.handle_lpc(feature, values);
-case "lpcc": return handler.handle_lpcc(feature, values);
-case "mfcc": return handler.handle_mfcc(feature, values);
-
-default: return 0.0;
-}*/
-

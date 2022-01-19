@@ -1,5 +1,6 @@
 #include "Extractor.h"
 #include <cmath>
+#include <iostream>
 
 using namespace ex;
 using namespace std;
@@ -25,9 +26,11 @@ double Extractor::mean_abs_dev(vector<double>& values, double my_mean) {
 }
 
 //Returns the geometric mean of the (absolute) values
-double Extractor::mean_geometric(vector<double> values) {
+double Extractor::mean_geometric_abs(vector<double> values) {
 	for (auto& value : values) {
-		value = log(value);
+		if (value != 0) {
+			value = log(abs(value));
+		}
 	}
 	double log_mean = mean(values);
 	return exp(log_mean);
@@ -35,28 +38,30 @@ double Extractor::mean_geometric(vector<double> values) {
 	/*
 	double product = 1;
 	for (auto& value : values) {
-		product *= abs(value);
+		if (value != 0) {
+			product = product * abs(value);
+		}
 	}
-
-	return pow(product, (1 / values.size()));
+	return pow(product, ((double)1 / values.size()));
 	*/
 }
 
 //Returns the median of the values
 double Extractor::median(vector<double> values) {
 	sort(values.begin(), values.end());
-	size_t size = values.size();
+	int size = values.size();
 	if (size % 2 == 0) {
-		int mid = size / 2;
+		int mid = size / 2 - 1;
 		return (values.at(mid) + values.at(mid + 1)) / 2;
 	}
 
-	return values.at(size / 2 + 0.5);
+	return values.at(size / 2);
 }
 
 //Returns the median of all absolute changes
 double Extractor::median_abs_diff(vector<double>& values) {
 	vector<double> abs_changes;
+	abs_changes.reserve(values.size());
 	for (size_t i = 0; i < values.size() - 1; i++) {
 		double diff = abs(values.at(i) - values.at(i + 1));
 		abs_changes.push_back(diff);
@@ -68,6 +73,7 @@ double Extractor::median_abs_diff(vector<double>& values) {
 //Returns the median of all changes 
 double Extractor::median_diff(vector<double>& values) {
 	vector<double> changes;
+	changes.reserve(values.size());
 	for (size_t i = 0; i < values.size() - 1; i++) {
 		double diff = values.at(i + 1) - values.at(i);
 		changes.push_back(diff);
@@ -79,6 +85,7 @@ double Extractor::median_diff(vector<double>& values) {
 //Returns the median of all absolute deviations to the median
 double Extractor::median_abs_dev(vector<double>& values, double my_median) {
 	vector<double> abs_dev;
+	abs_dev.reserve(values.size());
 	for (auto& value : values) {
 		double dev = abs(value - my_median);
 		abs_dev.push_back(dev);
@@ -104,7 +111,6 @@ double Extractor::avg_dev(vector<double>& values, double my_mean) {
 
 //Returns the average quadratic deviation from mean
 double Extractor::var(vector<double>& values, double my_mean) {
-
 	double q_dev = 0;
 	for (auto& value : values) {
 		q_dev += pow(value - my_mean, 2);
@@ -152,7 +158,7 @@ double Extractor::zero_cross(vector<double>& values) {
 		}
 	}
 
-	return crosses / (values.size() - 1);
+	return crosses / values.size();
 }
 
 //Returns the maximum of all values
@@ -170,7 +176,7 @@ double Extractor::max(vector<double>& values) {
 double Extractor::abs_max(vector<double>& values) {
 	double max = abs(values.at(0));
 	for (auto& value : values) {
-		if (abs(value > max)) {
+		if (abs(value) > max) {
 			max = abs(value);
 		}
 	}
@@ -212,10 +218,10 @@ double Extractor::last_location_of_min(vector<double>& values, double min) {
 
 //Returns the first location of the maximum value
 double Extractor::first_location_of_max(vector<double>& values, double max) {
-	size_t index = 0;
+	double index = 0;
 	for (int i = 1; i < values.size(); i++) {
-		if (values.at(i) == max) {
-			return index;
+		if (abs(values.at(i) - max) < numeric_limits<double>::epsilon()) {
+			return i;
 		}
 	}
 	return index;
@@ -223,21 +229,27 @@ double Extractor::first_location_of_max(vector<double>& values, double max) {
 
 //Returns the first location of the minimum value
 double Extractor::first_location_of_min(vector<double>& values, double min) {
-	size_t index = 0;
+	double index = 0;
 	for (int i = 1; i < values.size(); i++) {
-		if (values.at(i) == min) {
-			return index;
+		if (abs(values.at(i) - min) < numeric_limits<double>::epsilon()) {
+			return i;
 		}
 	}
 	return index;
 }
 
-//Returns the average of the n largest values
-double Extractor::mean_n_abs_max_values(vector<double> values, int n) {
+//Returns the average of the n largest absolute values
+double Extractor::mean_n_abs_max(vector<double> values, int n) {
+	if (n > values.size()) {
+		return 0.0;
+	}
+	for (auto& value : values) {
+		value = abs(value);
+	}
 	sort(values.begin(), values.end());
 	double sum = 0;
 	for (int i = values.size() - 1; i > values.size() - 1 - n; i--) {
-		sum += values.at(i);
+		sum += abs(values.at(i));
 	}
 	return sum / n;
 }
@@ -246,6 +258,7 @@ double Extractor::mean_n_abs_max_values(vector<double> values, int n) {
 //Returns the mean of the absolute differences of consecutive values
 double Extractor::mean_abs_change(vector<double>& values) {
 	vector<double> abs_changes;
+	abs_changes.reserve(values.size());
 	for (size_t i = 0; i < values.size() - 1; i++) {
 		double diff = abs(values.at(i) - values.at(i + 1));
 		abs_changes.push_back(diff);
@@ -257,8 +270,9 @@ double Extractor::mean_abs_change(vector<double>& values) {
 //Returns the mean of differences of consecutive values
 double Extractor::mean_change(vector<double>& values) {
 	vector<double> changes;
+	changes.reserve(values.size());
 	for (size_t i = 0; i < values.size() - 1; i++) {
-		double diff = abs(values.at(i) - values.at(i + 1));
+		double diff = values.at(i+1) - values.at(i);
 		changes.push_back(diff);
 	}
 
@@ -268,6 +282,7 @@ double Extractor::mean_change(vector<double>& values) {
 //Returns the sum of the absolute differences of consecutive values
 double Extractor::abs_sum_of_changes(vector<double>& values) {
 	vector<double> abs_changes;
+	abs_changes.reserve(values.size());
 	for (size_t i = 0; i < values.size() - 1; i++) {
 		double diff = abs(values.at(i) - values.at(i + 1));
 		abs_changes.push_back(diff);
@@ -279,23 +294,23 @@ double Extractor::abs_sum_of_changes(vector<double>& values) {
 //Calculates the absolute differences of all values between the two quantiles and applies the aggregation function
 double Extractor::change_quantile(vector<double> values, double lower, double upper, string aggr) {
 	sort(values.begin(), values.end());
-	vector<double> abs_changes_sub;
+ 
 	for (size_t i = lower; i <= upper; i++) {
 		double diff = abs(values.at(i) - values.at(i + 1));
-		abs_changes_sub.push_back(diff);
+		values.at(i) = diff;
 	}
 
 	if (aggr == "mean") {
-		return mean(abs_changes_sub);
+		return mean(values);
 	}
 	else if (aggr == "median") {
-		return median(abs_changes_sub);
+		return median(values);
 	}
 	else if (aggr == "var") {
-		return var(abs_changes_sub, mean(abs_changes_sub));
+		return var(values, mean(values));
 	}
 	else if (aggr == "std_dev") {
-		return std_dev(abs_changes_sub, var(abs_changes_sub, mean(abs_changes_sub)));
+		return std_dev(values, var(values, mean(values)));
 	}
 	else {
 		return 0;
@@ -314,7 +329,7 @@ double Extractor::sum(vector<double>& values) {
 //Calculates the sum of all values with a value between lower and upper
 double Extractor::range_count(vector<double>& values, double lower, double upper) {
 	double sum = 0;
-	for (auto value : values) {
+	for (auto& value : values) {
 		if (value > lower && value < upper) {
 			sum += value;
 		}
@@ -325,7 +340,7 @@ double Extractor::range_count(vector<double>& values, double lower, double upper
 //Returns the number of non-zero values
 double Extractor::non_zero_count(vector<double>& values) {
 	double amount = 0;
-	for (auto value : values) {
+	for (auto& value : values) {
 		if (value != 0) {
 			amount++;
 		}
@@ -336,7 +351,7 @@ double Extractor::non_zero_count(vector<double>& values) {
 //Returns the percentage of values greater than x
 double Extractor::count_above(vector<double>& values, double x) {
 	double amount = 0;
-	for (auto value : values) {
+	for (auto& value : values) {
 		if (value > x) {
 			amount++;
 		}
@@ -352,7 +367,7 @@ double Extractor::count_above_mean(vector<double>& values, double mean) {
 //Returns the percentage of values lower than x
 double Extractor::count_below(vector<double>& values, double x) {
 	double amount = 0;
-	for (auto value : values) {
+	for (auto& value : values) {
 		if (value < x) {
 			amount++;
 		}
@@ -373,14 +388,15 @@ double Extractor::root_mean_square(vector<double>& values) {
 //Returns the value which is greater than q*n percent of all values
 double Extractor::quantile(vector<double> values, double q) {
 	sort(values.begin(), values.end());
+	
 	double nq = q * values.size();
 	int i = floor(nq);
-	if (abs(nq - i) > 0.0001) {
+	if (abs(nq - i) > 0.00000001) {
 		i= ceil(nq);
-		return values.at(i);
+		return values.at(i - 1);
 	}
 	else {
-		return (values.at(i) + values.at(i + 1)) / 2;
+		return (values.at(i - 1) + values.at(i)) / 2;
 	}
 }
 
@@ -411,37 +427,45 @@ double Extractor::positive_turnings(vector<double>& values) {
 	return amount;
 }
 
-//Calculates the autocorrelation for a specified lag
+//Calculates a mfc coefficient
+double Extractor::mfcc(vector<double>& values, int samplingRate, int numFilters, int m) {
+	return getCoefficient(values, samplingRate, numFilters, values.size(), m);
+}
+
+//Calculates an estimation of the autocorrelation for a specified lag
 double Extractor::autocorrelation(vector<double>& values, int lag, double mean, double var) {
 	double sum = 0;
 	for (size_t i = 0; i < values.size() - lag; i++) {
 		sum = (values.at(i) - mean) * (values.at(i + lag) - mean);
 	}
-	double corr = sum / ((values.size() - lag) * var);
+	double corr = sum / ((values.size() - (double) lag) * var);
 	return corr;
 }
 
 /*
 //https://www.geeksforgeeks.org/iterative-fast-fourier-transformation-polynomial-multiplication/
-vector<Extractor::cd> Extractor::fft(std::vector<double>& values) {
-	int n = values.size();
-	vector<cd> res(n);
-	bool pad = false;
-
-	double power = log2(values.size());
+vector<Extractor::cd> Extractor::fft(std::vector<cd>& values_imag) {
+	int n = values_imag.size();
+	double power = log2(values_imag.size());
 	int power_round = ceil(power);
+
 	//Pad vector if necessary
 	if (abs(power - power_round) > 0.0001) {
-		res.resize(pow(2, power_round) - res.size(), 0);
+		n = pow(2, power_round);
+		values_imag.resize(n);
 	}
-	n = res.size();
+	vector<cd> res;
+	res.reserve(n);
+	for (int i = 0; i < n; i++) {
+		res.push_back((0, 0));
+	}
+
 	// bit reversal of the given array
-	for (unsigned int i = 0; i < n; ++i) {
+	for (unsigned int i = 0; i < n; i++) {
 		int rev = bitReverse(i, power_round);
-		res[i] = values[rev];
+		res.at(i) = values_imag[rev];
 	}
 	
-
 	// j is iota
 	const complex<double> J(0, 1);
 	for (int s = 1; s <= power_round; ++s) {
@@ -451,7 +475,7 @@ vector<Extractor::cd> Extractor::fft(std::vector<double>& values) {
 
 		// principle root of nth complex
 		// root of unity.
-		cd wm = exp(J * (PI / m2));
+		cd wm = exp(J * (pi / m2));
 		for (int j = 0; j < m2; ++j) {
 			for (int k = j; k < n; k += m) {
 
@@ -468,7 +492,6 @@ vector<Extractor::cd> Extractor::fft(std::vector<double>& values) {
 			w *= wm;
 		}
 	}
-
 	return res;
 }
 
@@ -483,5 +506,5 @@ unsigned int Extractor::bitReverse(unsigned int x, int log2n)
 		x >>= 1;
 	}
 	return n;
-}
-*/
+}*/
+

@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
+#include "libmfcc.h"
 //#include <complex>
 
 namespace ex {
@@ -14,12 +14,12 @@ namespace ex {
 	class Extractor
 	{
 	public:
+
 		//typedef std::complex<double> cd;
-		//const double PI = 3.1415926536;
 
 		double mean(std::vector<double>&);
 		double mean_abs_dev(std::vector<double>&, double);
-		double mean_geometric(std::vector<double>);
+		double mean_geometric_abs(std::vector<double>);
 		double median(std::vector<double>);
 		double median_abs_diff(std::vector<double>&);
 		double median_diff(std::vector<double>&);
@@ -39,7 +39,7 @@ namespace ex {
 		double last_location_of_min(std::vector<double>&, double);
 		double first_location_of_max(std::vector<double>&, double);
 		double first_location_of_min(std::vector<double>&, double);
-		double mean_n_abs_max_values(std::vector<double>, int);
+		double mean_n_abs_max(std::vector<double>, int);
 
 		double mean_abs_change(std::vector<double>&);
 		double mean_change(std::vector<double>&);
@@ -60,12 +60,8 @@ namespace ex {
 		double positive_turnings(std::vector<double>&);
 
 		double autocorrelation(std::vector<double>&, int, double, double);
-		//std::vector<cd> fft(std::vector<double>&);
-		
-		/*
-		double lpc(std::vector<double>&, std::vector<double>&);
-		double lpcc(std::vector<double>&, std::vector<double>&);
-		double mfcc(std::vector<double>&, std::vector<double>&);*/
+		double mfcc(std::vector<double>&, int, int, int);
+		//std::vector<cd> fft(std::vector<cd>&);
 	
 	private:
 		unsigned int bitReverse(unsigned int, int);
