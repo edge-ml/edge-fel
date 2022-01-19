@@ -7,15 +7,13 @@
 #include <vector>
 #include <algorithm>
 #include "libmfcc.h"
-#include <complex>
+#include "Cmplx.h"
 
 namespace ex {
 
 	class Extractor
 	{
 	public:
-
-		typedef std::complex<double> cd;
 
 		double mean(std::vector<double>&);
 		double mean_abs_dev(std::vector<double>&, double);
@@ -61,7 +59,7 @@ namespace ex {
 
 		double autocorrelation(std::vector<double>&, int, double, double);
 		double mfcc(std::vector<double>&, int, int, int);
-		std::vector<cd> fft(std::vector<cd>&);
+		std::vector<co::cd> fft(std::vector<co::cd>&);
 		std::vector<double> lpc(std::vector<double>&, int);
 		std::vector<double> lpcc(std::vector<double>&, int);
 		

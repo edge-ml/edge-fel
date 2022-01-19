@@ -3,6 +3,7 @@
 using namespace ed;
 using namespace eh;
 using namespace std;
+using namespace co;
 
 bool ExtractionDelegate::doCache = false;
 map<string, double> ExtractionDelegate::calculated;
@@ -70,7 +71,7 @@ map<string, double> ExtractionDelegate::extractAll(vector<double>& values, map<s
 }
 
 //Extracts the spectrum of the times series with fft
-vector<ex::Extractor::cd> ExtractionDelegate::extractSpectrum(vector<double>& values) {
+vector<cd> ExtractionDelegate::extractSpectrum(vector<double>& values) {
 	return handler.handle_fft("fft", values);
 }
 

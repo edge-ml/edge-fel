@@ -4,6 +4,7 @@ using namespace eh;
 using namespace ed;
 using namespace std;
 using namespace ex;
+using namespace co;
 
 map<string, double> params = { {"mean_n_abs_max_n", 8}, {"change_quantile_lower", 0.1}, {"change_quantile_upper", 0.1},  {"range_count_lower",-1},
 		{"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1} };
@@ -39,14 +40,14 @@ int testExtractAll(vector<double> values, map<string, double> featuresAndResults
 	return 0;
 }
 
-int testExtractSpectrum(vector<double> values, vector<Extractor::cd> coefficients) {
+int testExtractSpectrum(vector<double> values, vector<cd> coefficients) {
 	ExtractionDelegate delegate;
 	delegate.fillHandlerMap();
 	ExtractionDelegate::doCache = false;
-	vector<Extractor::cd> res = delegate.extractSpectrum(values);
+	vector<cd> res = delegate.extractSpectrum(values);
 	for (int i = 0; i < res.size(); i++) {
-		cout << "expected: (" << coefficients[i].real() << "," << coefficients[i].imag() << ") ";
-		cout << "actual : (" << res[i].real() << "," << res[i].imag() << ")" << "\n";
+		cout << "expected: (" << coefficients[i].real << "," << coefficients[i].imag << ") ";
+		cout << "actual : (" << res[i].real << "," << res[i].imag << ")" << "\n";
 	}
 
 	return 0;

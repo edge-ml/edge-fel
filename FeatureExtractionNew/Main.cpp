@@ -6,11 +6,13 @@
 #include <vector>
 #include <iostream>
 #include <ctime>
+#include "FeatureExtractionNew.ino/Cmplx.h"
 
 using namespace eh;
 using namespace ed;
 using namespace std;
 using namespace ex;
+using namespace co;
 
 //missing: "mean_geometric","avg_dev", "change_quantile", "non_zero_count", "count_above",  "count_below",
 map<string, double> featuresAndResults1k = { {"mean", 0.0048368} , {"mean_abs_dev", 1.9915990}, {"median", 0.060006}, {"median_abs_diff", 2.5281278},
@@ -53,7 +55,7 @@ int main() {
 	clock_t start, end;
 	start = clock();
 	map<string, double> results = delegate.extractAll(values, params);
-	vector<Extractor::cd> spectrum = delegate.extractSpectrum(values);
+	vector<cd> spectrum = delegate.extractSpectrum(values);
 	vector<double> lpc = delegate.extractLpc(values, values.size(), values.size());
 	vector<double> lpcc = delegate.extractLpcc(values, values.size(), values.size(), values.size());
 	end = clock();
@@ -61,7 +63,7 @@ int main() {
 	for (auto single : results) {
 		cout << single.first << ": " << single.second << "\n";
 	}
-	cout << "spectrum[0] :" << spectrum[0] << "\n";
+	cout << "spectrum[0] :" << toString(spectrum[0]) << "\n";
 	cout << "lpc[0] : " << lpc[0] << "\n";
 	cout << "lpcc[0] : " << lpcc[0] << "\n";
 

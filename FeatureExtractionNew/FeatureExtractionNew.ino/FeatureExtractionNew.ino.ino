@@ -43,7 +43,7 @@ void loop() {
       std::map<string, double> params = { {"mean_n_abs_max_n", 8}, {"change_quantile_lower", 0.1}, {"change_quantile_upper", 0.1},  {"range_count_lower",-1}, 
           {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1} };
 
-      /*
+      
       for (auto iter : ExtractionDelegate::handlers) {
         double value = (handler.*(iter.second))(iter.first, values);
         Serial.println(iter.first.c_str());
@@ -57,9 +57,8 @@ void loop() {
         Serial.print(feature.c_str());
         Serial.print(": ");
         Serial.println(res);
-        
-      }*/
-
+      }
+/*
       std::map<string, double> results;
       for (auto iter : ExtractionDelegate::handlers) {
         double value = (handler.*(iter.second))(iter.first, values);
@@ -69,7 +68,7 @@ void loop() {
         results.emplace(iter.first, value);
       }
       std::map<string, double> parameterFeatures = delegate.extractSome(ExtractionDelegate::parameterFeatures, values, params);
-      results.insert(parameterFeatures.begin(), parameterFeatures.end());
+      results.insert(parameterFeatures.begin(), parameterFeatures.end());*/
 
       /*
       long timer = millis();
@@ -87,7 +86,7 @@ void loop() {
       Serial.print(dur);
       Serial.println(F(" ms"));
       
-      
+      */
       //Clear Cache
       ExtractionDelegate::calculated.clear();
       
@@ -95,7 +94,7 @@ void loop() {
       while (Serial.available() > 0){
           Serial.read();
       }
-      delay(10);*/
+      delay(10);
     }
   }
     

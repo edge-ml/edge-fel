@@ -4,6 +4,7 @@
 
 using namespace ex;
 using namespace std;
+using namespace co;
 
 //Returns the mean of the values
 double Extractor::mean(vector<double>& values) {
@@ -448,7 +449,7 @@ double Extractor::autocorrelation(vector<double>& values, int lag, double mean, 
 
 
 //https://www.geeksforgeeks.org/iterative-fast-fourier-transformation-polynomial-multiplication/
-vector<Extractor::cd> Extractor::fft(std::vector<cd>& values_imag) {
+vector<cd> Extractor::fft(std::vector<cd>& values_imag) {
 	int n = values_imag.size();
 	double power = log2(values_imag.size());
 	int power_round = ceil(power);
@@ -461,7 +462,8 @@ vector<Extractor::cd> Extractor::fft(std::vector<cd>& values_imag) {
 	vector<cd> res;
 	res.reserve(n);
 	for (int i = 0; i < n; i++) {
-		res.push_back((0, 0));
+		cd c(0, 0);
+		res.push_back(c);
 	}
 
 	// bit reversal of the given array
@@ -471,7 +473,7 @@ vector<Extractor::cd> Extractor::fft(std::vector<cd>& values_imag) {
 	}
 	
 	// j is iota
-	const complex<double> J(0, 1);
+	const cd J(0, 1);
 	for (int s = 1; s <= power_round; ++s) {
 		int m = 1 << s; // 2 power s
 		int m2 = m >> 1; // m2 = m/2 -1
@@ -479,21 +481,20 @@ vector<Extractor::cd> Extractor::fft(std::vector<cd>& values_imag) {
 
 		// principle root of nth complex
 		// root of unity.
-		cd wm = exp(J * (pi / m2));
+		cd wm = e(mul(J, pi / m2)); 
 		for (int j = 0; j < m2; ++j) {
 			for (int k = j; k < n; k += m) {
-
 				// t = twiddle factor
-				cd t = w * res[k + m2];
+				cd t = mul(w, res[k + m2]);
 				cd u = res[k];
 
 				// similar calculating y[k]
-				res[k] = u + t;
+				res[k] = add(u, t);
 
 				// similar calculating y[k+n/2]
-				res[k + m2] = u - t;
+				res[k + m2] = sub(u, t);
 			}
-			w *= wm;
+			w = mul(w, wm);
 		}
 	}
 	return res;

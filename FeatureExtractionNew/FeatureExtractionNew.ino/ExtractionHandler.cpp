@@ -4,6 +4,7 @@ using namespace ed;
 using namespace ex;
 using namespace eh;
 using namespace std;
+using namespace co;
 
 Extractor extractor;
 
@@ -262,30 +263,28 @@ double ExtractionHandler::handle_autocorrelation(string feature, vector<double>&
 	return extractor.autocorrelation(values, lag, mean, var);
 }
 
-
-//Handler function for mfcc, takes samplingRate, numFilters and the coefficient number as parameter, calls handle_fft and transform result to real numbers
-double ExtractionHandler::handle_mfcc(string feature, vector<double>& values, double sampling_rate, double num_filter, double m) {
-	vector<Extractor::cd> spectralData = handle_fft("fft", values);
-	vector<double> spectralDataReal;
-	spectralDataReal.reserve(spectralData.size());
-	for (Extractor::cd& c : spectralData) {
-		double realValue = sqrt(pow(c.imag(), 2) + pow(c.real(), 2));
-		spectralDataReal.push_back(realValue);
-	}
-	return extractor.mfcc(spectralDataReal, sampling_rate, num_filter, m);
-}
-
-
 //Handler function for fft, transforms vector into imaginary numbers and returns a vector of imaginary doubles
-vector<Extractor::cd> ExtractionHandler::handle_fft(string feature, vector<double>& values) {
-	vector<Extractor::cd> values_imag;
+vector<cd> ExtractionHandler::handle_fft(string feature, vector<double>& values) {
+	vector<cd> values_imag;
 	values_imag.reserve(values.size());
 	for (double value : values) {
-		Extractor::cd imag(value, 0.0);
+		cd imag(value, 0.0);
 		values_imag.push_back(imag);
 	}
 
 	return extractor.fft(values_imag);
+}
+
+//Handler function for mfcc, takes samplingRate, numFilters and the coefficient number as parameter, calls handle_fft and transform result to real numbers
+double ExtractionHandler::handle_mfcc(string feature, vector<double>& values, double sampling_rate, double num_filter, double m) {
+	vector<cd> spectralData = handle_fft("fft", values);
+	vector<double> spectralDataReal;
+	spectralDataReal.reserve(spectralData.size());
+	for (cd& c : spectralData) {
+		double realValue = sqrt(pow(c.imag, 2) + pow(c.real, 2));
+		spectralDataReal.push_back(realValue);
+	}
+	return extractor.mfcc(spectralDataReal, sampling_rate, num_filter, m);
 }
 
 //Handler function for lpc, creates a vector of n autocorrelations, takes amount of autocorrelations n as param
