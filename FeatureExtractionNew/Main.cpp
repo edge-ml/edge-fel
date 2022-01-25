@@ -39,15 +39,29 @@ int main() {
 	//testExtractAll(Data::values_ten, featuresAndResults10);
 	//testExtractOne(Data::values_ten, featuresAndResults10);
 
-	
 	vector<double> values = Data::values_thousand;
 	ExtractionDelegate delegate;
-	delegate.fillHandlerMap();
 	ExtractionDelegate::doCache = true;
 
-	map<string, double> params = { {"mean_n_abs_max_n", 8}, {"change_quantile_lower", 0.1}, {"change_quantile_upper", 0.1},  {"range_count_lower",-1},
-		{"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1}, {"mfcc_sampling_rate", 100}, 
-		{"mfcc_num_filter", 48}, {"mfcc_m", 1} };
+	map<string, double> params = { {"mean_n_abs_max_n", 8}, {"change_quantile_lower", 0.1}, {"change_quantile_upper", 0.1}, {"change_quantile_aggr", 0},
+		{"range_count_lower", -1}, {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1},
+		{"mfcc_sampling_rate", 100}, {"mfcc_num_filter", 48}, {"mfcc_m", 1} };
+	cout << "Starting feature extraction" << "\n";
+	clock_t start, end;
+	start = clock();
+	double res = delegate.extractOne("mfcc", values, params);
+	end = clock();
+	cout << "Feature extraction finished, took: " << ((double)end - start) / CLOCKS_PER_SEC << "\n";
+	cout << res;
+
+	/*
+	vector<double> values = Data::values_thousand;
+	ExtractionDelegate delegate;
+	ExtractionDelegate::doCache = true;
+
+	map<string, double> params = { {"mean_n_abs_max_n", 8}, {"change_quantile_lower", 0.1}, {"change_quantile_upper", 0.1}, {"change_quantile_aggr", 0}, 
+		{"range_count_lower", -1}, {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1}, 
+		{"mfcc_sampling_rate", 100}, {"mfcc_num_filter", 48}, {"mfcc_m", 1} };
 
 	string caching = ExtractionDelegate::doCache ? "activated" : "not active";
 	cout << "Starting feature extraction, caching " << caching << "\n";
@@ -69,7 +83,7 @@ int main() {
 
 	cout << "Feature extraction finished, took: " << ((double)end - start) / CLOCKS_PER_SEC << "\n";
 	ExtractionDelegate::calculated.clear();
-	
+	*/
 }
 
 

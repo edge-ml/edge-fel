@@ -7,34 +7,33 @@ using namespace co;
 
 bool ExtractionDelegate::doCache = false;
 map<string, double> ExtractionDelegate::calculated;
-ExtractionDelegate::handler_map ExtractionDelegate::handlers;
 ExtractionHandler handler;
 vector<string> ExtractionDelegate::parameterFeatures = {"mean_n_abs_max",  "change_quantile", "range_count", "count_above", "count_below", "quantile", "autocorrelation", "mfcc" };
 
 //Extracts the requested feature from the data, doesnt include features which return a list
 double ExtractionDelegate::extractOne(string feature, vector<double>& values, map<string, double>& params) {
-		if (feature == "mean_n_abs_max") {
+		if (feature == "mean_n_abs_max" && params.find("mean_n_abs_max_n") != params.end()) {
 			return handler.handle_mean_n_abs_max(feature, values, params.at("mean_n_abs_max_n"));
 		}
-		else if (feature == "change_quantile") {
-			return handler.handle_change_quantile(feature, values, params.at("change_quantile_lower"), params.at("change_quantile_upper"), "sum");
+		else if (feature == "change_quantile" && params.find("change_quantile_lower") != params.end() && params.find("change_quantile_upper") != params.end() && params.find("change_quantile_aggr") != params.end()) {
+			return handler.handle_change_quantile(feature, values, params.at("change_quantile_lower"), params.at("change_quantile_upper"), params.at("change_quantile_aggr"));
 		}
-		else if (feature == "range_count") {
+		else if (feature == "range_count" && params.find("range_count_lower") != params.end() && params.find("range_count_upper") != params.end()) {
 			return handler.handle_range_count(feature, values, params.at("range_count_lower"), params.at("range_count_upper"));
 		}
-		else if (feature == "count_above") {
+		else if (feature == "count_above" && params.find("count_above_x") != params.end()) {
 			return handler.handle_count_above(feature, values, params.at("count_above_x"));
 		}
-		else if (feature == "count_below") {
+		else if (feature == "count_below" && params.find("count_below_x") != params.end()) {
 			return handler.handle_count_below(feature, values, params.at("count_below_x"));
 		}
-		else if (feature == "quantile") {
+		else if (feature == "quantile" && params.find("quantile_q") != params.end()) {
 			return handler.handle_quantile(feature, values, params.at("quantile_q"));
 		}
-		else if (feature == "autocorrelation") {
+		else if (feature == "autocorrelation" && params.find("autocorrelation_lag") != params.end()) {
 			return handler.handle_autocorrelation(feature, values, params.at("autocorrelation_lag"));
 		}
-		else if (feature == "mfcc") {
+		else if (feature == "mfcc" && params.find("mfcc_sampling_rate") != params.end() && params.find("mfcc_num_filter") != params.end() && params.find("mfcc_m") != params.end()) {
 			return handler.handle_mfcc("mfcc", values, params.at("mfcc_sampling_rate"), params.at("mfcc_num_filter"), params.at("mfcc_m"));
 		}
 		else {
@@ -82,7 +81,7 @@ vector<double> ExtractionDelegate::extractLpc(vector<double>& values, double aut
 
 //Extracts n lpc cepstrum coefficients
 vector<double> ExtractionDelegate::extractLpcc(vector<double>& values, double auto_n, double lpc_n, double cep_length) {
-	return handler.handle_lpcc("lpc", values, auto_n, lpc_n, cep_length);
+	return handler.handle_lpcc("lpcc", values, auto_n, lpc_n, cep_length);
 }
 
 //Helper method for fail-fast cache check and insertion

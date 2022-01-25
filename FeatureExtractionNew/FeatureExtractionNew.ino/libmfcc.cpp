@@ -10,18 +10,19 @@
 #include "libmfcc.h"
 
 using namespace std;
+using namespace co;
 
  /*
   * Computes the specified (mth) MFCC
   *
-  * spectralData - array of doubles containing the results of FFT computation. This data is already assumed to be purely real
+  * spectralData - array of complex doubles containing the results of FFT computation.
   * samplingRate - the rate that the original time-series data was sampled at (i.e 44100)
   * NumFilters - the number of filters to use in the computation. Recommended value = 48
   * binSize - the size of the spectralData array, usually a power of 2
   * m - The mth MFCC coefficient to compute
   *
   */
-double getCoefficient(vector<double> spectralData, unsigned int samplingRate, unsigned int NumFilters, unsigned int binSize, unsigned int m)
+double getCoefficient(vector<cd>& spectralData, unsigned int samplingRate, unsigned int NumFilters, unsigned int binSize, unsigned int m)
 {
 	double result = 0.0f;
 	double outerSum = 0.0f;
@@ -44,7 +45,7 @@ double getCoefficient(vector<double> spectralData, unsigned int samplingRate, un
 		innerSum = 0.0f;
 		for (k = 0; k < binSize - 1; k++)
 		{
-			innerSum += fabs(spectralData[k] * GetFilterParameter(samplingRate, binSize, k, l));
+			innerSum += fabs(sqrt(pow(spectralData[k].imag, 2) + pow(spectralData[k].real, 2)) * GetFilterParameter(samplingRate, binSize, k, l));
 		}
 
 		if (innerSum > 0.0f)

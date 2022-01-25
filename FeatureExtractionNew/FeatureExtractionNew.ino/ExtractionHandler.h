@@ -41,7 +41,7 @@ namespace eh {
 		double handle_mean_abs_change(std::string, std::vector<double>&);
 		double handle_mean_change(std::string, std::vector<double>&);
 		double handle_abs_sum_of_changes(std::string, std::vector<double>&);
-		double handle_change_quantile(std::string, std::vector<double>&, double, double, std::string);
+		double handle_change_quantile(std::string, std::vector<double>&, double, double, double);
 
 		double handle_sum(std::string, std::vector<double>&);
 		double handle_range_count(std::string, std::vector<double>&, double, double);

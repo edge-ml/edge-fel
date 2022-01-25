@@ -150,7 +150,7 @@ double Extractor::skewness(vector<double>& values, double mean, double std_dev) 
 	return sum / values.size();
 }
 
-//Returns the percentile of zero crossings of two consecutive values
+//Returns the percentage of zero crossings of two consecutive values
 double Extractor::zero_cross(vector<double>& values) {
 	double crosses = 0;
 	for (size_t i = 0; i < values.size() - 1; i++) {
@@ -293,8 +293,7 @@ double Extractor::abs_sum_of_changes(vector<double>& values) {
 }
 
 //Calculates the absolute differences of all values between the two quantiles and applies the aggregation function
-double Extractor::change_quantile(vector<double> values, double lower, double upper, string aggr) {
-	cout << "hh";
+double Extractor::change_quantile(vector<double> values, double lower, double upper, int aggr) {
 	sort(values.begin(), values.end());
  
 	for (size_t i = lower; i <= upper; i++) {
@@ -302,19 +301,19 @@ double Extractor::change_quantile(vector<double> values, double lower, double up
 		values.at(i) = diff;
 	}
 
-	if (aggr == "sum") {
+	if (aggr == 0) {
 		return sum(values);
 	} 
-	else if (aggr == "mean") {
+	else if (aggr == 1) {
 		return mean(values);
 	}
-	else if (aggr == "median") {
+	else if (aggr == 2) {
 		return median(values);
 	}
-	else if (aggr == "var") {
+	else if (aggr == 3) {
 		return var(values, mean(values));
 	}
-	else if (aggr == "std_dev") {
+	else if (aggr == 4) {
 		return std_dev(values, var(values, mean(values)));
 	}
 	else {
@@ -386,8 +385,8 @@ double Extractor::count_below_mean(vector<double>& values, double mean) {
 }
 
 //Returns the root of the mean of all squares values
-double Extractor::root_mean_square(vector<double>& values) {
-	return sqrt(abs_energy(values)/values.size());
+double Extractor::root_mean_square(vector<double>& values, double energy) {
+	return sqrt(energy/values.size());
 }
 
 //Returns the value which is greater than q*n percent of all values
@@ -433,7 +432,7 @@ double Extractor::positive_turnings(vector<double>& values) {
 }
 
 //Calculates a mfc coefficient
-double Extractor::mfcc(vector<double>& values, int samplingRate, int numFilters, int m) {
+double Extractor::mfcc(vector<cd>& values, int samplingRate, int numFilters, int m) {
 	return getCoefficient(values, samplingRate, numFilters, values.size(), m);
 }
 
@@ -443,33 +442,36 @@ double Extractor::autocorrelation(vector<double>& values, int lag, double mean, 
 	for (size_t i = 0; i < values.size() - lag; i++) {
 		sum = (values.at(i) - mean) * (values.at(i + lag) - mean);
 	}
-	double corr = sum / ((values.size() - (double) lag) * var);
+	double corr = sum / ((values.size() - (double) lag) * pow(var,2));
 	return corr;
 }
 
 
 //https://www.geeksforgeeks.org/iterative-fast-fourier-transformation-polynomial-multiplication/
-vector<cd> Extractor::fft(std::vector<cd>& values_imag) {
-	int n = values_imag.size();
-	double power = log2(values_imag.size());
+vector<cd> Extractor::fft(std::vector<double>& values) {
+	int n = values.size();
+	double power = log2(values.size());
 	int power_round = ceil(power);
 
 	//Pad vector if necessary
 	if (abs(power - power_round) > 0.0001) {
 		n = pow(2, power_round);
-		values_imag.resize(n);
 	}
 	vector<cd> res;
 	res.reserve(n);
+  
 	for (int i = 0; i < n; i++) {
 		cd c(0, 0);
 		res.push_back(c);
 	}
-
 	// bit reversal of the given array
 	for (unsigned int i = 0; i < n; i++) {
 		int rev = bitReverse(i, power_round);
-		res.at(i) = values_imag[rev];
+		cd c;
+		if (rev < values.size()) {
+			c.real = values[rev];
+		}
+		res.at(i) = c;
 	}
 	
 	// j is iota
@@ -567,4 +569,3 @@ vector<double> Extractor::lpcc(vector<double>& lpc_coeffs, int cep_length) {
 
 	return lpcc;
 }
-

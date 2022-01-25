@@ -19,13 +19,17 @@ namespace ed {
 	{
 		
 	public:
+		//Constructor that fills the handler map
+		ExtractionDelegate() {
+			fillHandlerMap();
+		}
+
 		//Function pointer type
 		typedef double (eh::ExtractionHandler::*handler_func) (std::string, std::vector<double>&);
 
 		//Function pointer map
 	    typedef std::map<std::string, handler_func> handler_map;
-		static handler_map handlers;
-		void fillHandlerMap();
+		handler_map handlers;
 
 		//List of features that take parameters
 		static std::vector<std::string> parameterFeatures;
@@ -43,7 +47,10 @@ namespace ed {
 		std::vector<double> extractLpc(std::vector<double>&, double, double);
 		std::vector<double> extractLpcc(std::vector<double>&, double, double, double);
 
+	private:
+		void fillHandlerMap();
 	};
+	
 
 }
 #endif

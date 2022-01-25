@@ -9,11 +9,12 @@
 #pragma once
 
 #include <vector>
+#include "Cmplx.h"
 
 const double pi = 3.14159265358979323846264338327;
 
 // Returns the specified (mth) MFCC
-double getCoefficient(std::vector<double> spectralData, unsigned int samplingRate, unsigned int NumFilters, unsigned int binSize, unsigned int m);
+double getCoefficient(std::vector<co::cd>& spectralData, unsigned int samplingRate, unsigned int NumFilters, unsigned int binSize, unsigned int m);
 
 // Compute the normalization factor (For internal computation only - not to be called directly)
 double NormalizationFactor(int NumFilters, int m);

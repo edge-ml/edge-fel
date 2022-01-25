@@ -42,7 +42,7 @@ namespace ex {
 		double mean_abs_change(std::vector<double>&);
 		double mean_change(std::vector<double>&);
 		double abs_sum_of_changes(std::vector<double>&);
-		double change_quantile(std::vector<double>, double, double, std::string);
+		double change_quantile(std::vector<double>, double, double, int);
 
 		double sum(std::vector<double>&);
 		double range_count(std::vector<double>&, double, double);
@@ -51,15 +51,15 @@ namespace ex {
 		double count_above_mean(std::vector<double>&, double);
 		double count_below(std::vector<double>&, double);
 		double count_below_mean(std::vector<double>&, double);
-		double root_mean_square(std::vector<double>&);
+		double root_mean_square(std::vector<double>&, double);
 		double quantile(std::vector<double>, double);
 		double interquartile_range(std::vector<double>&);
 		double negative_turnings(std::vector<double>&);
 		double positive_turnings(std::vector<double>&);
 
 		double autocorrelation(std::vector<double>&, int, double, double);
-		double mfcc(std::vector<double>&, int, int, int);
-		std::vector<co::cd> fft(std::vector<co::cd>&);
+		double mfcc(std::vector<co::cd>&, int, int, int);
+		std::vector<co::cd> fft(std::vector<double>&);
 		std::vector<double> lpc(std::vector<double>&, int);
 		std::vector<double> lpcc(std::vector<double>&, int);
 		

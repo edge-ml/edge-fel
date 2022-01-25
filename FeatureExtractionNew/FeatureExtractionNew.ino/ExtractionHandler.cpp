@@ -89,7 +89,12 @@ double ExtractionHandler::handle_var(string feature, vector<double>& values) {
 
 //Handler function for abs_energy
 double ExtractionHandler::handle_abs_energy(string feature, vector<double>& values) {
-	return extractor.abs_energy(values);
+	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {
+		return ExtractionDelegate::calculated.at(feature);
+	}
+	double value = extractor.abs_energy(values);
+	ExtractionDelegate::checkAndInsert(feature, value);
+	return value;
 }
 
 //Handler function for kurtosis, calls handle_mean and handle_std_dev
@@ -184,7 +189,7 @@ double ExtractionHandler::handle_abs_sum_of_changes(string feature, vector<doubl
 
 
 //Handler function for change_quantiles, takes lower and upper quantile and a aggregation function as input
-double ExtractionHandler::handle_change_quantile(string feature, vector<double>& values, double lower, double upper, string aggr) {
+double ExtractionHandler::handle_change_quantile(string feature, vector<double>& values, double lower, double upper, double aggr) {
 	return extractor.change_quantile(values, lower, upper, aggr);
 }
 
@@ -233,7 +238,8 @@ double ExtractionHandler::handle_count_below_mean(string feature, vector<double>
 
 //Handler function for root_mean_square
 double ExtractionHandler::handle_root_mean_square(string feature, vector<double>& values) {
-	return extractor.root_mean_square(values);
+	double energy = handle_abs_energy("abs_energy", values);
+	return extractor.root_mean_square(values, energy);
 }
 
 //Handler function for quantiles, takes the quantile 0 <= q <= 1 as parameter
@@ -263,28 +269,15 @@ double ExtractionHandler::handle_autocorrelation(string feature, vector<double>&
 	return extractor.autocorrelation(values, lag, mean, var);
 }
 
-//Handler function for fft, transforms vector into imaginary numbers and returns a vector of imaginary doubles
+//Handler function for fft, returns a vector of imaginary doubles
 vector<cd> ExtractionHandler::handle_fft(string feature, vector<double>& values) {
-	vector<cd> values_imag;
-	values_imag.reserve(values.size());
-	for (double value : values) {
-		cd imag(value, 0.0);
-		values_imag.push_back(imag);
-	}
-
-	return extractor.fft(values_imag);
+	return extractor.fft(values);
 }
 
 //Handler function for mfcc, takes samplingRate, numFilters and the coefficient number as parameter, calls handle_fft and transform result to real numbers
 double ExtractionHandler::handle_mfcc(string feature, vector<double>& values, double sampling_rate, double num_filter, double m) {
 	vector<cd> spectralData = handle_fft("fft", values);
-	vector<double> spectralDataReal;
-	spectralDataReal.reserve(spectralData.size());
-	for (cd& c : spectralData) {
-		double realValue = sqrt(pow(c.imag, 2) + pow(c.real, 2));
-		spectralDataReal.push_back(realValue);
-	}
-	return extractor.mfcc(spectralDataReal, sampling_rate, num_filter, m);
+	return extractor.mfcc(spectralData, sampling_rate, num_filter, m);
 }
 
 //Handler function for lpc, creates a vector of n autocorrelations, takes amount of autocorrelations n as param
