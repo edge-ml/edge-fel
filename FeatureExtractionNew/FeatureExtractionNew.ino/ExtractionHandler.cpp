@@ -275,9 +275,15 @@ vector<cd> ExtractionHandler::handle_fft(string feature, vector<double>& values)
 }
 
 //Handler function for mfcc, takes samplingRate, numFilters and the coefficient number as parameter, calls handle_fft and transform result to real numbers
-double ExtractionHandler::handle_mfcc(string feature, vector<double>& values, double sampling_rate, double num_filter, double m) {
+vector<double> ExtractionHandler::handle_mfcc(string feature, vector<double>& values, double sampling_rate, double num_filter, double m) {
 	vector<cd> spectralData = handle_fft("fft", values);
-	return extractor.mfcc(spectralData, sampling_rate, num_filter, m);
+	vector<double> coeffs;
+	coeffs.reserve(m);
+	for (int i = 1; i <= m; i++) {
+		coeffs.push_back(extractor.mfcc(spectralData, sampling_rate, num_filter, i));
+	}
+
+	return coeffs;
 }
 
 //Handler function for lpc, creates a vector of n autocorrelations, takes amount of autocorrelations n as param

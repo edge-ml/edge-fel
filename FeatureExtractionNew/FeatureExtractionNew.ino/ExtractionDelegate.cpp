@@ -8,7 +8,7 @@ using namespace co;
 bool ExtractionDelegate::doCache = false;
 map<string, double> ExtractionDelegate::calculated;
 ExtractionHandler handler;
-vector<string> ExtractionDelegate::parameterFeatures = {"mean_n_abs_max",  "change_quantile", "range_count", "count_above", "count_below", "quantile", "autocorrelation", "mfcc" };
+vector<string> ExtractionDelegate::parameterFeatures = {"mean_n_abs_max",  "change_quantile", "range_count", "count_above", "count_below", "quantile", "autocorrelation"};
 
 //Extracts the requested feature from the data, doesnt include features which return a list
 double ExtractionDelegate::extractOne(string feature, vector<double>& values, map<string, double>& params) {
@@ -32,9 +32,6 @@ double ExtractionDelegate::extractOne(string feature, vector<double>& values, ma
 		}
 		else if (feature == "autocorrelation" && params.find("autocorrelation_lag") != params.end()) {
 			return handler.handle_autocorrelation(feature, values, params.at("autocorrelation_lag"));
-		}
-		else if (feature == "mfcc" && params.find("mfcc_sampling_rate") != params.end() && params.find("mfcc_num_filter") != params.end() && params.find("mfcc_m") != params.end()) {
-			return handler.handle_mfcc("mfcc", values, params.at("mfcc_sampling_rate"), params.at("mfcc_num_filter"), params.at("mfcc_m"));
 		}
 		else {
 			auto iter = ExtractionDelegate::handlers.find(feature);
@@ -72,6 +69,11 @@ map<string, double> ExtractionDelegate::extractAll(vector<double>& values, map<s
 //Extracts the spectrum of the times series with fft
 vector<cd> ExtractionDelegate::extractSpectrum(vector<double>& values) {
 	return handler.handle_fft("fft", values);
+}
+
+//Extracts m mfcc coefficients
+vector<double> ExtractionDelegate::extractMfcc(vector<double>& values, double sampling_rate, double num_filter, double m) {
+	return handler.handle_mfcc("mfcc", values, sampling_rate, num_filter, m);
 }
 
 //Extracts n lpc coefficients
