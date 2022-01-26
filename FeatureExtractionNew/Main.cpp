@@ -43,6 +43,9 @@ int main() {
 	ExtractionDelegate delegate;
 	ExtractionDelegate::doCache = true;
 
+	cout << delegate.extractOne("mean", values, featuresAndResults10);
+
+	/*
 	cout << "Starting feature extraction" << "\n";
 	clock_t start, end;
 	start = clock();
@@ -50,7 +53,7 @@ int main() {
 	end = clock();
 	cout << "Feature extraction finished, took: " << ((double)end - start) / CLOCKS_PER_SEC << "\n";
 	cout << coeffs[0];
-
+	*/
 	/*
 	vector<double> values = Data::values_thousand;
 	ExtractionDelegate delegate;
