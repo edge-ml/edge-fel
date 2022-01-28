@@ -55,7 +55,7 @@ double Extractor::median(vector<double> values) {
 		int mid = size / 2 - 1;
 		return (values.at(mid) + values.at(mid + 1)) / 2;
 	}
-
+  
 	return values.at(size / 2);
 }
 
@@ -91,8 +91,8 @@ double Extractor::median_abs_dev(vector<double>& values, double my_median) {
 		double dev = abs(value - my_median);
 		abs_dev.push_back(dev);
 	}
-
-	return median(abs_dev);
+  double res = median(abs_dev);
+	return res;
 }
 
 //Returns the standard deviation, which is the square root of the variance

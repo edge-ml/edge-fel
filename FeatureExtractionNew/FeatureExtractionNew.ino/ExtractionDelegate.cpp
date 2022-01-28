@@ -6,12 +6,12 @@ using namespace std;
 using namespace co;
 
 bool ExtractionDelegate::doCache = false;
-map<string, double> ExtractionDelegate::calculated;
+std::map<string, double> ExtractionDelegate::calculated;
 ExtractionHandler handler;
 vector<string> ExtractionDelegate::parameterFeatures = {"mean_n_abs_max",  "change_quantile", "range_count", "count_above", "count_below", "quantile", "autocorrelation"};
 
 //Extracts the requested feature from the data, doesnt include features which return a list
-double ExtractionDelegate::extractOne(string feature, vector<double>& values, map<string, double>& params) {
+double ExtractionDelegate::extractOne(string feature, vector<double>& values, std::map<string, double>& params) {
 		if (feature == "mean_n_abs_max" && params.find("mean_n_abs_max_n") != params.end()) {
 			return handler.handle_mean_n_abs_max(feature, values, params.at("mean_n_abs_max_n"));
 		}
@@ -44,8 +44,8 @@ double ExtractionDelegate::extractOne(string feature, vector<double>& values, ma
 }
 
 //Extracts the requested features from the data, doesnt include features which return a list
-map<string, double> ExtractionDelegate::extractSome(vector<string>& features, vector<double>& values, map<string, double>& params) {
-	map<string, double> results;
+std::map<string, double> ExtractionDelegate::extractSome(vector<string>& features, vector<double>& values, std::map<string, double>& params) {
+	std::map<string, double> results;
 	for (string feature : features) {
 		double value = extractOne(feature, values, params);
 		results.emplace(feature, value);
@@ -55,13 +55,13 @@ map<string, double> ExtractionDelegate::extractSome(vector<string>& features, ve
 }
 
 //Extracts all available features from the data, doesnt include features which return a list
-map<string, double> ExtractionDelegate::extractAll(vector<double>& values, map<string, double>& params) {
-	map<string, double> results;
+std::map<string, double> ExtractionDelegate::extractAll(vector<double>& values, std::map<string, double>& params) {
+	std::map<string, double> results;
 	for (auto iter : ExtractionDelegate::handlers) {
 		double value = (handler.*(iter.second))(iter.first, values);
 		results.emplace(iter.first, value);
 	}
-	map<string, double> parameterFeatures = extractSome(ExtractionDelegate::parameterFeatures, values, params);
+	std::map<string, double> parameterFeatures = extractSome(ExtractionDelegate::parameterFeatures, values, params);
 	results.insert(parameterFeatures.begin(), parameterFeatures.end());
 	return results;
 }
