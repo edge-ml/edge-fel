@@ -40,7 +40,23 @@ double ExtractionDelegate::extractOne(string feature, vector<double>& values, st
 			}
 			return 0.0;
 		}
-	
+}
+
+
+//Extracts the requested feature from the data which return a list of doubles. Fft is not included here!
+vector<double> ExtractionDelegate::extractOneVectorial(string feature, vector<double>& values, std::map<string, double>& params) {
+    if (feature == "mfcc" && params.find("mfcc_sampling_rate") != params.end(), params.find("mfcc_num_filter") != params.end(), params.find("mfcc_m") != params.end()) {
+      return handler.handle_mfcc(feature, values, params.at("mfcc_sampling_rate"), params.at("mfcc_num_filter"), params.at("mfcc_m"));
+    }
+    else if (feature == "lpc" && params.find("lpc_auto_n") != params.end() && params.find("lpc_n") != params.end()) {
+      return handler.handle_lpc(feature, values, params.at("lpc_auto_n"), params.at("lpc_n"));
+    }
+    else if (feature == "lpcc" && params.find("lpcc_auto_n") != params.end() && params.find("lpcc_n") != params.end() && params.find("lpcc_cep_length") != params.end()) {
+      return handler.handle_lpcc(feature, values, params.at("lpcc_auto_n"), params.at("lpcc_n"), params.at("lpcc_cep_length"));
+    }
+    else {
+      return {};
+    }
 }
 
 //Extracts the requested features from the data, doesnt include features which return a list
@@ -69,21 +85,6 @@ std::map<string, double> ExtractionDelegate::extractAll(vector<double>& values, 
 //Extracts the spectrum of the times series with fft
 vector<cd> ExtractionDelegate::extractSpectrum(vector<double>& values) {
 	return handler.handle_fft("fft", values);
-}
-
-//Extracts m mfcc coefficients
-vector<double> ExtractionDelegate::extractMfcc(vector<double>& values, double sampling_rate, double num_filter, double m) {
-	return handler.handle_mfcc("mfcc", values, sampling_rate, num_filter, m);
-}
-
-//Extracts n lpc coefficients
-vector<double> ExtractionDelegate::extractLpc(vector<double>& values, double auto_n, double lpc_n) {
-	return handler.handle_lpc("lpc", values, auto_n, lpc_n);
-}
-
-//Extracts n lpc cepstrum coefficients
-vector<double> ExtractionDelegate::extractLpcc(vector<double>& values, double auto_n, double lpc_n, double cep_length) {
-	return handler.handle_lpcc("lpcc", values, auto_n, lpc_n, cep_length);
 }
 
 //Helper method for fail-fast cache check and insertion

@@ -66,6 +66,7 @@ namespace ex {
 	
 	private:
 		unsigned int bitReverse(unsigned int, int);
+    double call_by_reference_median(std::vector<double>&);
 	};
 
 }

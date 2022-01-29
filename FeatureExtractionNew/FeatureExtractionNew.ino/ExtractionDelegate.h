@@ -41,12 +41,10 @@ namespace ed {
 
 		//Extraction helpers
 		double extractOne(std::string, std::vector<double>&, std::map<std::string, double>&);
+    std::vector<double> extractOneVectorial(std::string, std::vector<double>&, std::map<std::string, double>&);
 		std::map<std::string, double> extractSome(std::vector<std::string>&, std::vector<double>&, std::map<std::string, double>&);
 		std::map<std::string, double> extractAll(std::vector <double>&, std::map<std::string, double>&);
 		std::vector<co::cd> extractSpectrum(std::vector<double>&);
-		std::vector<double> extractMfcc(std::vector<double>&, double, double, double);
-		std::vector<double> extractLpc(std::vector<double>&, double, double);
-		std::vector<double> extractLpcc(std::vector<double>&, double, double, double);
 
 	private:
 		void fillHandlerMap();

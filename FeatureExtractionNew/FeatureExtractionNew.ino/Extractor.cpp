@@ -47,6 +47,18 @@ double Extractor::mean_geometric_abs(vector<double> values) {
 	*/
 }
 
+//Helper method for median inside extractors
+double Extractor::call_by_reference_median(vector<double>& values) {
+  sort(values.begin(), values.end());
+  int size = values.size();
+  if (size % 2 == 0) {
+    int mid = size / 2 - 1;
+    return (values.at(mid) + values.at(mid + 1)) / 2;
+  }
+  
+  return values.at(size / 2);
+}
+
 //Returns the median of the values
 double Extractor::median(vector<double> values) {
 	sort(values.begin(), values.end());
@@ -68,7 +80,7 @@ double Extractor::median_abs_diff(vector<double>& values) {
 		abs_changes.push_back(diff);
 	}
 
-	return median(abs_changes);
+	return call_by_reference_median(abs_changes);
 }
 
 //Returns the median of all changes 
@@ -79,8 +91,8 @@ double Extractor::median_diff(vector<double>& values) {
 		double diff = values.at(i + 1) - values.at(i);
 		changes.push_back(diff);
 	}
-
-	return median(changes);
+ 
+	return call_by_reference_median(changes);
 }
 
 //Returns the median of all absolute deviations to the median
@@ -91,8 +103,8 @@ double Extractor::median_abs_dev(vector<double>& values, double my_median) {
 		double dev = abs(value - my_median);
 		abs_dev.push_back(dev);
 	}
-  double res = median(abs_dev);
-	return res;
+ 
+  return call_by_reference_median(abs_dev);
 }
 
 //Returns the standard deviation, which is the square root of the variance
@@ -308,7 +320,7 @@ double Extractor::change_quantile(vector<double> values, double lower, double up
 		return mean(values);
 	}
 	else if (aggr == 2) {
-		return median(values);
+		return call_by_reference_median(values);
 	}
 	else if (aggr == 3) {
 		return var(values, mean(values));
