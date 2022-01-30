@@ -72,7 +72,7 @@ double Extractor::median(vector<double> values) {
 }
 
 //Returns the median of all absolute changes
-double Extractor::median_abs_diff(vector<double>& values) {
+double Extractor::median_abs_changes(vector<double>& values) {
 	vector<double> abs_changes;
 	abs_changes.reserve(values.size());
 	for (size_t i = 0; i < values.size() - 1; i++) {
@@ -84,7 +84,7 @@ double Extractor::median_abs_diff(vector<double>& values) {
 }
 
 //Returns the median of all changes 
-double Extractor::median_diff(vector<double>& values) {
+double Extractor::median_changes(vector<double>& values) {
 	vector<double> changes;
 	changes.reserve(values.size());
 	for (size_t i = 0; i < values.size() - 1; i++) {
@@ -269,7 +269,7 @@ double Extractor::mean_n_abs_max(vector<double> values, int n) {
 
 
 //Returns the mean of the absolute differences of consecutive values
-double Extractor::mean_abs_change(vector<double>& values) {
+double Extractor::mean_abs_changes(vector<double>& values) {
 	vector<double> abs_changes;
 	abs_changes.reserve(values.size());
 	for (size_t i = 0; i < values.size() - 1; i++) {
@@ -281,7 +281,7 @@ double Extractor::mean_abs_change(vector<double>& values) {
 }
 
 //Returns the mean of differences of consecutive values
-double Extractor::mean_change(vector<double>& values) {
+double Extractor::mean_changes(vector<double>& values) {
 	vector<double> changes;
 	changes.reserve(values.size());
 	for (size_t i = 0; i < values.size() - 1; i++) {

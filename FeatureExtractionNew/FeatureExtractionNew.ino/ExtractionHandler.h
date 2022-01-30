@@ -18,8 +18,8 @@ namespace eh {
 		double handle_mean_abs_dev(std::string, std::vector<double>&);
 		double handle_mean_geometric_abs(std::string, std::vector<double>&);
 		double handle_median(std::string, std::vector<double>&);
-		double handle_median_abs_diff(std::string, std::vector<double>&);
-		double handle_median_diff(std::string, std::vector<double>&);
+		double handle_median_abs_changes(std::string, std::vector<double>&);
+		double handle_median_changes(std::string, std::vector<double>&);
 		double handle_median_abs_dev(std::string, std::vector<double>&);
 		double handle_std_dev(std::string, std::vector<double>&);
 		double handle_avg_dev(std::string, std::vector<double>&);
@@ -38,8 +38,8 @@ namespace eh {
 		double handle_first_location_of_min(std::string, std::vector<double>&);
 		double handle_mean_n_abs_max(std::string, std::vector<double>&, double);
 
-		double handle_mean_abs_change(std::string, std::vector<double>&);
-		double handle_mean_change(std::string, std::vector<double>&);
+		double handle_mean_abs_changes(std::string, std::vector<double>&);
+		double handle_mean_changes(std::string, std::vector<double>&);
 		double handle_abs_sum_of_changes(std::string, std::vector<double>&);
 		double handle_change_quantile(std::string, std::vector<double>&, double, double, double);
 

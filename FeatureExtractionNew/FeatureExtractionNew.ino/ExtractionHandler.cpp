@@ -42,13 +42,13 @@ double ExtractionHandler::handle_median(string feature, vector<double>& values) 
 }
 
 //Handler function for median_abs_diff
-double ExtractionHandler::handle_median_abs_diff(string feature, vector<double>& values) {
-	return extractor.median_abs_diff(values);
+double ExtractionHandler::handle_median_abs_changes(string feature, vector<double>& values) {
+	return extractor.median_abs_changes(values);
 }
 
 //Handler function for median_diff
-double ExtractionHandler::handle_median_diff(string feature, vector<double>& values) {
-	return extractor.median_diff(values);
+double ExtractionHandler::handle_median_changes(string feature, vector<double>& values) {
+	return extractor.median_changes(values);
 }
 
 //Handler function for median_abs_dev, calls handle_median
@@ -173,13 +173,13 @@ double ExtractionHandler::handle_mean_n_abs_max(string feature, vector<double>& 
 }
 
 //Handler function for mean_abs_change
-double ExtractionHandler::handle_mean_abs_change(string feature, vector<double>& values) {
-	return extractor.mean_abs_change(values);
+double ExtractionHandler::handle_mean_abs_changes(string feature, vector<double>& values) {
+	return extractor.mean_abs_changes(values);
 }
 
 //Handler function for mean_change
-double ExtractionHandler::handle_mean_change(string feature, vector<double>& values) {
-	return extractor.mean_change(values);
+double ExtractionHandler::handle_mean_changes(string feature, vector<double>& values) {
+	return extractor.mean_changes(values);
 }
 
 //Handler function for abs_sum_of_changes

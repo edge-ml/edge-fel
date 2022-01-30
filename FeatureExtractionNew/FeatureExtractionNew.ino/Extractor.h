@@ -19,8 +19,8 @@ namespace ex {
 		double mean_abs_dev(std::vector<double>&, double);
 		double mean_geometric_abs(std::vector<double>);
 		double median(std::vector<double>);
-		double median_abs_diff(std::vector<double>&);
-		double median_diff(std::vector<double>&);
+		double median_abs_changes(std::vector<double>&);
+		double median_changes(std::vector<double>&);
 		double median_abs_dev(std::vector<double>&, double);
 		double std_dev(std::vector<double>&, double);
 		double avg_dev(std::vector<double>&, double);
@@ -39,8 +39,8 @@ namespace ex {
 		double first_location_of_min(std::vector<double>&, double);
 		double mean_n_abs_max(std::vector<double>, int);
 
-		double mean_abs_change(std::vector<double>&);
-		double mean_change(std::vector<double>&);
+		double mean_abs_changes(std::vector<double>&);
+		double mean_changes(std::vector<double>&);
 		double abs_sum_of_changes(std::vector<double>&);
 		double change_quantile(std::vector<double>, double, double, int);
 
