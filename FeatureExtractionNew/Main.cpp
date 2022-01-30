@@ -39,24 +39,21 @@ int main() {
 	//testExtractAll(Data::values_ten, featuresAndResults10);
 	//testExtractOne(Data::values_ten, featuresAndResults10);
 
-	/*vector<double> values = Data::values_thousand;
+	vector<double> values = Data::values_thousand;
 	ExtractionDelegate delegate;
 	ExtractionDelegate::doCache = true;
 	map<string, double> params = { {"mean_n_abs_max_n", 8}, {"change_quantile_lower", -0.1}, {"change_quantile_upper", 0.1}, {"change_quantile_aggr", 0},
 		{"range_count_lower", -1}, {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1},
-		{"mfcc_sampling_rate", 100}, {"mfcc_num_filter", 48}, {"mfcc_m", 1} };*/
+		{"mfcc_sampling_rate", 100}, {"mfcc_num_filter", 48}, {"mfcc_m", 1}, {"lpc_auto_n", values.size()}, {"lpc_n", values.size()}, {"lpcc_auto_n", values.size()}, 
+		{"lpcc_n", values.size()}, {"lpcc_cep_length", values.size()} };
 
+	vector<double> coeffs = delegate.extractOneVectorial("lpc", values, params);
+	coeffs = delegate.extractOneVectorial("lpcc", values, params);
 
-	/*
-	cout << "Starting feature extraction" << "\n";
-	clock_t start, end;
-	start = clock();
-	vector<double> coeffs = delegate.extractMfcc(values, 100, 48, 1);
-	end = clock();
-	cout << "Feature extraction finished, took: " << ((double)end - start) / CLOCKS_PER_SEC << "\n";
-	cout << coeffs[0];
-	*/
 	
+	
+	
+	/*
 	for (int i = 0; i < 10; i++) {
 		vector<double> values = Data::values_thousand;
 		ExtractionDelegate delegate;
@@ -75,7 +72,7 @@ int main() {
 
 		cout << "Feature extraction finished, took: " << ((double)end - start) / CLOCKS_PER_SEC << "\n";
 		ExtractionDelegate::calculated.clear();
-	}
+	}*/
 }
 
 

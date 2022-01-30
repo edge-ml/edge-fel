@@ -48,47 +48,47 @@ void loop() {
       Serial.println(ExtractionDelegate::doCache);
       long timer;
       if(strcmp(input, "all") == 0){
-         timer = millis();
+         timer = micros();
          std::map<string, double> results = delegate.extractAll(values, params);
-         dur = millis() - timer;
+         dur = micros() - timer;
          Serial.print(F("Extract all has finished, took "));
          Serial.print(dur);
-         Serial.println(F(" ms"));
+         Serial.println(F(" µs"));
          
       } else if (strcmp(input, "all_iterative") == 0){
         std::map<string, double> results;
         for (auto iter : delegate.handlers) {
-          timer = millis();
+          timer = micros();
           double res = (handler.*(iter.second))(iter.first, values);
-          dur = millis() - timer;
+          dur = micros() - timer;
           results.emplace(iter.first, res);
           printTime(iter.first, res, dur);
         }
         
         for (string feature : ExtractionDelegate::parameterFeatures){
-          timer = millis();
+          timer = micros();
           double res = delegate.extractOne(feature, values, params);
-          dur = millis() - timer;
+          dur = micros() - timer;
           results.emplace(feature, res);
           printTime(feature, res, dur);
         }
       
       } else if (strcmp(input, "fft") == 0){
-          timer = millis();
+          timer = micros();
           vector<cd> spectrum = delegate.extractSpectrum(values);
-          dur = millis() - timer;
+          dur = micros() - timer;
           printTime(input, spectrum[0].real, dur);
       
       } else if (strcmp(input, "mfcc") == 0 || strcmp(input, "lpc") == 0 || strcmp(input, "lpcc") == 0) {
-          timer = millis();
+          timer = micros();
           vector<double> coeffs = delegate.extractOneVectorial(input, values, params);
-          dur = millis() - timer;
+          dur = micros() - timer;
           printTime(input, coeffs[0], dur);
           
       } else {
-          timer = millis();
+          timer = micros();
           double res = delegate.extractOne(input, values, params);
-          dur = millis() - timer;
+          dur = micros() - timer;
           printTime(input, res, dur);
       }
       
@@ -107,5 +107,5 @@ void printTime(string feature, double res, long dur){
   Serial.print(res, 7);
   Serial.print(F(", took "));
   Serial.print(dur);
-  Serial.println(F(" ms"));
+  Serial.println(F(" µs"));
 }

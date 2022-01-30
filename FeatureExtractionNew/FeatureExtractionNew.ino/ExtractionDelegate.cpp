@@ -1,4 +1,5 @@
 #include "ExtractionDelegate.h"
+#include <iostream>
 
 using namespace ed;
 using namespace eh;
@@ -45,7 +46,7 @@ double ExtractionDelegate::extractOne(string feature, vector<double>& values, st
 
 //Extracts the requested feature from the data which return a list of doubles. Fft is not included here!
 vector<double> ExtractionDelegate::extractOneVectorial(string feature, vector<double>& values, std::map<string, double>& params) {
-    if (feature == "mfcc" && params.find("mfcc_sampling_rate") != params.end(), params.find("mfcc_num_filter") != params.end(), params.find("mfcc_m") != params.end()) {
+	if (feature == "mfcc" && params.find("mfcc_sampling_rate") != params.end() && params.find("mfcc_num_filter") != params.end() && params.find("mfcc_m") != params.end()) {
       return handler.handle_mfcc(feature, values, params.at("mfcc_sampling_rate"), params.at("mfcc_num_filter"), params.at("mfcc_m"));
     }
     else if (feature == "lpc" && params.find("lpc_auto_n") != params.end() && params.find("lpc_n") != params.end()) {
