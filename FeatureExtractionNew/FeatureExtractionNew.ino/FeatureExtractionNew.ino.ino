@@ -17,6 +17,7 @@ const unsigned int MAX_INPUT_LENGTH = 25;
 
 void setup() {
   Serial.begin(115200);
+  
 }
 
 void loop() {
@@ -39,7 +40,7 @@ void loop() {
       ExtractionDelegate delegate;
       ExtractionHandler handler;
       ExtractionDelegate::doCache = caching;
-      vector<double>* values = &Data::values_thousand;
+      vector<double>* values = &Data::values_thousand_fivehundred;
       std::map<string, double> params = {{"mean_n_abs_max_n", 8}, {"change_quantile_lower", -0.1}, {"change_quantile_upper", 0.1}, {"change_quantile_aggr", 0}, {"range_count_lower",-1}, 
           {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1}, {"mfcc_sampling_rate", 100}, {"mfcc_num_filter", 48}, 
           {"mfcc_m", 1}, {"lpc_auto_n", values->size()}, {"lpc_n", values->size()}, {"lpcc_auto_n", values->size()}, {"lpcc_n", values->size()}, {"lpcc_cep_length", values->size()}};
