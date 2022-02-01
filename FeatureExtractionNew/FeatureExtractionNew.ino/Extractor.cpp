@@ -403,7 +403,7 @@ double Extractor::root_mean_square(vector<double>& values, double energy) {
 
 //Returns the value which is greater than q*n percent of all values
 double Extractor::quantile(vector<double> values, double q) {
-  sort(values.begin(), values.end());
+	sort(values.begin(), values.end());
 	
 	double nq = q * values.size();
 	int i = floor(nq);
@@ -418,8 +418,8 @@ double Extractor::quantile(vector<double> values, double q) {
 
 //Returns the difference of the 3/4 and 1/4 quantiles
 double Extractor::interquartile_range(vector<double>& values) {
-  double upper = quantile(values, 0.75);
-  double lower = quantile(values, 0.25);
+	double upper = quantile(values, 0.75);
+	double lower = quantile(values, 0.25);
 	return upper - lower;
 }
 

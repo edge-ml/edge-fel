@@ -5,9 +5,9 @@
 
 class Data {
 public:
-	const static std::vector<double> values_ten;
-	const static std::vector<double> values_hundred;
-	const static std::vector<double> values_thousand;
+	static std::vector<double> values_ten;
+	static std::vector<double> values_hundred;
+	static std::vector<double> values_thousand;
 	//const static std::vector<double> values_ten_thousand;
 };
 
