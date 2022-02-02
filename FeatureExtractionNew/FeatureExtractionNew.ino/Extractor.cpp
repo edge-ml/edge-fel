@@ -27,16 +27,16 @@ double Extractor::mean_abs_dev(vector<double>& values, double my_mean) {
 }
 
 //Returns the geometric mean of the (absolute) values
-double Extractor::mean_geometric_abs(vector<double> values) {
-	for (auto& value : values) {
+double Extractor::mean_geometric_abs(vector<double>& values) {
+	/*for (auto& value : values) {
 		if (value != 0) {
 			value = log(abs(value));
 		}
 	}
 	double log_mean = mean(values);
 	return exp(log_mean);
-
-	/*
+*/
+	
 	double product = 1;
 	for (auto& value : values) {
 		if (value != 0) {
@@ -44,7 +44,7 @@ double Extractor::mean_geometric_abs(vector<double> values) {
 		}
 	}
 	return pow(product, ((double)1 / values.size()));
-	*/
+	
 }
 
 //Helper method for median inside extractors

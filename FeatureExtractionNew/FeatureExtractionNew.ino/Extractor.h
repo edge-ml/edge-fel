@@ -17,7 +17,7 @@ namespace ex {
 
 		double mean(std::vector<double>&);
 		double mean_abs_dev(std::vector<double>&, double);
-		double mean_geometric_abs(std::vector<double>);
+		double mean_geometric_abs(std::vector<double>&);
 		double median(std::vector<double>);
 		double median_abs_changes(std::vector<double>&);
 		double median_changes(std::vector<double>&);
