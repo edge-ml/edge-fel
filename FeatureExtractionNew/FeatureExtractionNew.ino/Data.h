@@ -5,11 +5,12 @@
 
 class Data {
 public:
-	//static std::vector<double> values_ten;
-	//static std::vector<double> values_hundred;
-  //static std::vector<double> values_five_hundred;
-	static std::vector<double> values_thousand;
-	//static std::vector<double> values_thousand_fivehundred;
+	//static std::vector<float> values_ten;
+	//static std::vector<float> values_hundred;
+  //static std::vector<float> values_five_hundred;
+	//static std::vector<float> values_thousand;
+	static std::vector<float> values_thousand_fivehundred;
+  //static std::vector<float> values_two_thousand;
 };
 
 #endif

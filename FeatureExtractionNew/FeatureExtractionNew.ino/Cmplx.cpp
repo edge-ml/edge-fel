@@ -18,7 +18,7 @@ my_complex co::sub(cd a, cd b) {
 	return res;
 }
 
-my_complex co::mul(cd a, double b) {
+my_complex co::mul(cd a, float b) {
 	cd res{};
 	res.real = a.real * b;
 	res.imag = a.imag * b;
@@ -42,4 +42,3 @@ my_complex co::e(cd a) {
 string co::toString(cd a) {
 	return "(" + to_string(a.real) + ", " + to_string(a.imag) + ")";
 }
-

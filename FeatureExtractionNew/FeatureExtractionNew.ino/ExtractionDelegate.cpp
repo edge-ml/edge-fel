@@ -7,12 +7,12 @@ using namespace std;
 using namespace co;
 
 bool ExtractionDelegate::doCache = false;
-std::map<string, double> ExtractionDelegate::calculated;
+std::map<string, float> ExtractionDelegate::calculated;
 ExtractionHandler handler;
 vector<string> ExtractionDelegate::parameterFeatures = {"mean_n_abs_max",  "change_quantile", "range_count", "count_above", "count_below", "quantile", "autocorrelation"};
 
 //Extracts the requested feature from the data, doesnt include features which return a list
-double ExtractionDelegate::extractOne(string feature, vector<double>& values, std::map<string, double>& params) {
+float ExtractionDelegate::extractOne(string feature, vector<float>& values, std::map<string, float>& params) {
 		if (feature == "mean_n_abs_max" && params.find("mean_n_abs_max_n") != params.end()) {
 			return handler.handle_mean_n_abs_max(feature, values, params.at("mean_n_abs_max_n"));
 		}
@@ -44,8 +44,8 @@ double ExtractionDelegate::extractOne(string feature, vector<double>& values, st
 }
 
 
-//Extracts the requested feature from the data which return a list of doubles. Fft is not included here!
-vector<double> ExtractionDelegate::extractOneVectorial(string feature, vector<double>& values, std::map<string, double>& params) {
+//Extracts the requested feature from the data which return a list of floats. Fft is not included here!
+vector<float> ExtractionDelegate::extractOneVectorial(string feature, vector<float>& values, std::map<string, float>& params) {
 	if (feature == "mfcc" && params.find("mfcc_sampling_rate") != params.end() && params.find("mfcc_num_filter") != params.end() && params.find("mfcc_m") != params.end()) {
       return handler.handle_mfcc(feature, values, params.at("mfcc_sampling_rate"), params.at("mfcc_num_filter"), params.at("mfcc_m"));
     }
@@ -61,10 +61,10 @@ vector<double> ExtractionDelegate::extractOneVectorial(string feature, vector<do
 }
 
 //Extracts the requested features from the data, doesnt include features which return a list
-std::map<string, double> ExtractionDelegate::extractSome(vector<string>& features, vector<double>& values, std::map<string, double>& params) {
-	std::map<string, double> results;
+std::map<string, float> ExtractionDelegate::extractSome(vector<string>& features, vector<float>& values, std::map<string, float>& params) {
+	std::map<string, float> results;
 	for (string feature : features) {
-		double value = extractOne(feature, values, params);
+		float value = extractOne(feature, values, params);
 		results.emplace(feature, value);
 	}
     
@@ -72,24 +72,24 @@ std::map<string, double> ExtractionDelegate::extractSome(vector<string>& feature
 }
 
 //Extracts all available features from the data, doesnt include features which return a list
-std::map<string, double> ExtractionDelegate::extractAll(vector<double>& values, std::map<string, double>& params) {
-	std::map<string, double> results;
+std::map<string, float> ExtractionDelegate::extractAll(vector<float>& values, std::map<string, float>& params) {
+	std::map<string, float> results;
 	for (auto iter : ExtractionDelegate::handlers) {
-		double value = (handler.*(iter.second))(iter.first, values);
+		float value = (handler.*(iter.second))(iter.first, values);
 		results.emplace(iter.first, value);
 	}
-	std::map<string, double> parameterFeatures = extractSome(ExtractionDelegate::parameterFeatures, values, params);
+	std::map<string, float> parameterFeatures = extractSome(ExtractionDelegate::parameterFeatures, values, params);
 	results.insert(parameterFeatures.begin(), parameterFeatures.end());
 	return results;
 }
 
 //Extracts the spectrum of the times series with fft
-vector<cd> ExtractionDelegate::extractSpectrum(vector<double>& values) {
+vector<cd> ExtractionDelegate::extractSpectrum(vector<float>& values) {
 	return handler.handle_fft("fft", values);
 }
 
 //Helper method for fail-fast cache check and insertion
-void ExtractionDelegate::checkAndInsert(string feature, double value) {
+void ExtractionDelegate::checkAndInsert(string feature, float value) {
 	if (doCache && !calculated.count(feature)) {
 		calculated.emplace(feature, value);
 	}

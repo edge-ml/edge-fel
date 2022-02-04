@@ -25,7 +25,7 @@ namespace ed {
 		}
 
 		//Function pointer type
-		typedef double (eh::ExtractionHandler::*handler_func) (std::string, std::vector<double>&);
+		typedef float (eh::ExtractionHandler::*handler_func) (std::string, std::vector<float>&);
 
 		//Function pointer map
 	    typedef std::map<std::string, handler_func> handler_map;
@@ -35,16 +35,16 @@ namespace ed {
 		static std::vector<std::string> parameterFeatures;
 
 		//Cache of calculated values
-		static std::map<std::string, double> calculated;
+		static std::map<std::string, float> calculated;
 		static bool doCache;
-		static void checkAndInsert(std::string, double);
+		static void checkAndInsert(std::string, float);
 
 		//Extraction helpers
-		double extractOne(std::string, std::vector<double>&, std::map<std::string, double>&);
-		std::vector<double> extractOneVectorial(std::string, std::vector<double>&, std::map<std::string, double>&);
-		std::map<std::string, double> extractSome(std::vector<std::string>&, std::vector<double>&, std::map<std::string, double>&);
-		std::map<std::string, double> extractAll(std::vector <double>&, std::map<std::string, double>&);
-		std::vector<co::cd> extractSpectrum(std::vector<double>&);
+		float extractOne(std::string, std::vector<float>&, std::map<std::string, float>&);
+		std::vector<float> extractOneVectorial(std::string, std::vector<float>&, std::map<std::string, float>&);
+		std::map<std::string, float> extractSome(std::vector<std::string>&, std::vector<float>&, std::map<std::string, float>&);
+		std::map<std::string, float> extractAll(std::vector <float>&, std::map<std::string, float>&);
+		std::vector<co::cd> extractSpectrum(std::vector<float>&);
 
 	private:
 		void fillHandlerMap();

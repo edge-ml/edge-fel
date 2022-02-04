@@ -15,58 +15,58 @@ namespace ex {
 	{
 	public:
 
-		double mean(std::vector<double>&);
-		double mean_abs_dev(std::vector<double>&, double);
-		double mean_geometric_abs(std::vector<double>&);
-		double median(std::vector<double>);
-		double median_abs_changes(std::vector<double>&);
-		double median_changes(std::vector<double>&);
-		double median_abs_dev(std::vector<double>&, double);
-		double std_dev(std::vector<double>&, double);
-		double avg_dev(std::vector<double>&, double);
-		double var(std::vector<double>&, double);
-		double abs_energy(std::vector<double>&);
-		double kurtosis(std::vector<double>&, double, double);
-		double skewness(std::vector<double>&, double, double);
-		double zero_cross(std::vector<double>&);
+		float mean(std::vector<float>&);
+		float mean_abs_dev(std::vector<float>&, float);
+		float mean_geometric_abs(std::vector<float>&);
+		float median(std::vector<float>);
+		float median_abs_changes(std::vector<float>&);
+		float median_changes(std::vector<float>&);
+		float median_abs_dev(std::vector<float>&, float);
+		float std_dev(std::vector<float>&, float);
+		float avg_dev(std::vector<float>&, float);
+		float var(std::vector<float>&, float);
+		float abs_energy(std::vector<float>&);
+		float kurtosis(std::vector<float>&, float, float);
+		float skewness(std::vector<float>&, float, float);
+		float zero_cross(std::vector<float>&);
 
-		double max(std::vector<double>&);
-		double abs_max(std::vector<double>&);
-		double min(std::vector<double>&);
-		double last_location_of_max(std::vector<double>&, double);
-		double last_location_of_min(std::vector<double>&, double);
-		double first_location_of_max(std::vector<double>&, double);
-		double first_location_of_min(std::vector<double>&, double);
-		double mean_n_abs_max(std::vector<double>, int);
+		float max(std::vector<float>&);
+		float abs_max(std::vector<float>&);
+		float min(std::vector<float>&);
+		float last_location_of_max(std::vector<float>&, float);
+		float last_location_of_min(std::vector<float>&, float);
+		float first_location_of_max(std::vector<float>&, float);
+		float first_location_of_min(std::vector<float>&, float);
+		float mean_n_abs_max(std::vector<float>, int);
 
-		double mean_abs_changes(std::vector<double>&);
-		double mean_changes(std::vector<double>&);
-		double abs_sum_of_changes(std::vector<double>&);
-		double change_quantile(std::vector<double>, double, double, int);
+		float mean_abs_changes(std::vector<float>&);
+		float mean_changes(std::vector<float>&);
+		float abs_sum_of_changes(std::vector<float>&);
+		float change_quantile(std::vector<float>, float, float, int);
 
-		double sum(std::vector<double>&);
-		double range_count(std::vector<double>&, double, double);
-		double non_zero_count(std::vector<double>&);
-		double count_above(std::vector<double>&, double);
-		double count_above_mean(std::vector<double>&, double);
-		double count_below(std::vector<double>&, double);
-		double count_below_mean(std::vector<double>&, double);
-		double root_mean_square(std::vector<double>&, double);
-		double quantile(std::vector<double>, double);
-		double interquartile_range(std::vector<double>&);
-		double negative_turnings(std::vector<double>&);
-		double positive_turnings(std::vector<double>&);
+		float sum(std::vector<float>&);
+		float range_count(std::vector<float>&, float, float);
+		float non_zero_count(std::vector<float>&);
+		float count_above(std::vector<float>&, float);
+		float count_above_mean(std::vector<float>&, float);
+		float count_below(std::vector<float>&, float);
+		float count_below_mean(std::vector<float>&, float);
+		float root_mean_square(std::vector<float>&, float);
+		float quantile(std::vector<float>, float);
+		float interquartile_range(std::vector<float>&);
+		float negative_turnings(std::vector<float>&);
+		float positive_turnings(std::vector<float>&);
 
-		double autocorrelation(std::vector<double>&, int, double, double);
-		double mfcc(std::vector<co::cd>&, int, int, int);
-		std::vector<co::cd> fft(std::vector<double>&);
-		std::vector<double> lpc(std::vector<double>&, int);
-		std::vector<double> lpcc(std::vector<double>&, int);
+		float autocorrelation(std::vector<float>&, int, float, float);
+		float mfcc(std::vector<co::cd>&, int, int, int);
+		std::vector<co::cd> fft(std::vector<float>&);
+		std::vector<float> lpc(std::vector<float>&, int);
+		std::vector<float> lpcc(std::vector<float>&, int);
 		
 	
 	private:
 		unsigned int bitReverse(unsigned int, int);
-		double call_by_reference_median(std::vector<double>&);
+		float call_by_reference_median(std::vector<float>&);
 	};
 
 }

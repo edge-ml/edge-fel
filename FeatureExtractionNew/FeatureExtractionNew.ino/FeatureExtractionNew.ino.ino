@@ -17,7 +17,6 @@ const unsigned int MAX_INPUT_LENGTH = 25;
 
 void setup() {
   Serial.begin(115200);
-  
 }
 
 void loop() {
@@ -40,8 +39,8 @@ void loop() {
       ExtractionDelegate delegate;
       ExtractionHandler handler;
       ExtractionDelegate::doCache = caching;
-      vector<double>* values = &Data::values_thousand;
-      std::map<string, double> params = {{"mean_n_abs_max_n", 8}, {"change_quantile_lower", -0.1}, {"change_quantile_upper", 0.1}, {"change_quantile_aggr", 0}, {"range_count_lower",-1}, 
+      vector<float>* values = &Data::values_thousand_fivehundred;
+      std::map<string, float> params = {{"mean_n_abs_max_n", 8}, {"change_quantile_lower", -0.1}, {"change_quantile_upper", 0.1}, {"change_quantile_aggr", 0}, {"range_count_lower",-1}, 
           {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1}, {"mfcc_sampling_rate", 100}, {"mfcc_num_filter", 48}, 
           {"mfcc_m", 1}, {"lpc_auto_n", values->size()}, {"lpc_n", values->size()}, {"lpcc_auto_n", values->size()}, {"lpcc_n", values->size()}, {"lpcc_cep_length", values->size()}};
       long dur;
@@ -50,17 +49,17 @@ void loop() {
       long timer;
       if(strcmp(input, "all") == 0){
          timer = micros();
-         std::map<string, double> results = delegate.extractAll(*values, params);
+         std::map<string, float> results = delegate.extractAll(*values, params);
          dur = micros() - timer;
          Serial.print(F("Extract all has finished, took "));
          Serial.print(dur);
          Serial.println(F(" µs"));
-         
+
       } else if (strcmp(input, "all_iterative") == 0){
-        std::map<string, double> results;
+        std::map<string, float> results;
         for (auto iter : delegate.handlers) {
           timer = micros();
-          double res = (handler.*(iter.second))(iter.first, *values);
+          float res = (handler.*(iter.second))(iter.first, *values);
           dur = micros() - timer;
           results.emplace(iter.first, res);
           printTime(iter.first, res, dur);
@@ -68,7 +67,7 @@ void loop() {
         
         for (string feature : ExtractionDelegate::parameterFeatures){
           timer = micros();
-          double res = delegate.extractOne(feature, *values, params);
+          float res = delegate.extractOne(feature, *values, params);
           dur = micros() - timer;
           results.emplace(feature, res);
           printTime(feature, res, dur);
@@ -82,13 +81,13 @@ void loop() {
       
       } else if (strcmp(input, "mfcc") == 0 || strcmp(input, "lpc") == 0 || strcmp(input, "lpcc") == 0) {
           timer = micros();
-          vector<double> coeffs = delegate.extractOneVectorial(input, *values, params);
+          vector<float> coeffs = delegate.extractOneVectorial(input, *values, params);
           dur = micros() - timer;
           printTime(input, coeffs[0], dur);
           
       } else {
           timer = micros();
-          double res = delegate.extractOne(input, *values, params);
+          float res = delegate.extractOne(input, *values, params);
           dur = micros() - timer;
           printTime(input, res, dur);
       }
@@ -103,7 +102,7 @@ void loop() {
   }
 }
 
-void printTime(string feature, double res, long dur){
+void printTime(string feature, float res, long dur){
   Serial.print(feature.c_str());
   Serial.print(F(": "));
   Serial.print(res, 7);
