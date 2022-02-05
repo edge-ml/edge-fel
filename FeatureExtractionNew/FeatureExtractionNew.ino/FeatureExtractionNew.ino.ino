@@ -23,7 +23,6 @@ void loop() {
   while (Serial.available() > 0){
     static char input[MAX_INPUT_LENGTH];
     static unsigned int pos = 0;
-    static unsigned int splitPos = 0;
     static boolean caching = false;
     char next = Serial.read();
     if (next != '\n' && (next >= 'a' && next <= 'z') || next == '_' || next == '1') {
@@ -37,9 +36,8 @@ void loop() {
       continue;
     } else {
       ExtractionDelegate delegate;
-      ExtractionHandler handler;
       ExtractionDelegate::doCache = caching;
-      vector<float>* values = &Data::values_thousand_fivehundred;
+      vector<float>* values = &Data::values_hundred;
       std::map<string, float> params = {{"mean_n_abs_max_n", 8}, {"change_quantile_lower", -0.1}, {"change_quantile_upper", 0.1}, {"change_quantile_aggr", 0}, {"range_count_lower",-1}, 
           {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1}, {"mfcc_sampling_rate", 100}, {"mfcc_num_filter", 48}, 
           {"mfcc_m", 1}, {"lpc_auto_n", values->size()}, {"lpc_n", values->size()}, {"lpcc_auto_n", values->size()}, {"lpcc_n", values->size()}, {"lpcc_cep_length", values->size()}};
@@ -59,7 +57,7 @@ void loop() {
         std::map<string, float> results;
         for (auto iter : delegate.handlers) {
           timer = micros();
-          float res = (handler.*(iter.second))(iter.first, *values);
+          float res = delegate.extractOne(iter.first, *values, params);//         (handler.*(iter.second))(iter.first, *values);
           dur = micros() - timer;
           results.emplace(iter.first, res);
           printTime(iter.first, res, dur);
