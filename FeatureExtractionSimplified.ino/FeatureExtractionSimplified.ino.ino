@@ -1,63 +1,47 @@
-#include "FEL.h"
-
 void setup() {
   Serial.begin(115200);
+  delay(100);
   
+  long timer;
+  long dur;
 
+  for (int i = 0; i < 3; i++){
+  int x = 6, y = 7;
+  timer = micros();
+  int xy = x/y;
+  dur = micros() - timer;
+  Serial.print(F("Result int: "));
+  Serial.print(xy);
+  Serial.print(", took: ");
+  Serial.print(dur);
+  Serial.println(F(" µs"));
+  delay(100);
+
+  float a = 1.064567f, b = 0.34654f;
+  timer = micros();
+  float ab = a/b;
+  dur = micros() - timer;
+  Serial.print(F("Result float: "));
+  Serial.print(ab);
+  Serial.print(", took: ");
+  Serial.print(dur);
+  Serial.println(F(" µs"));
+  delay(100);
+
+  double c = 1.064567, d = 0.34654;
+  timer = micros();
+  double cd  = c/d;
+  dur = micros() - timer;
+  Serial.print(F("Result double: "));
+  Serial.print(cd);
+  Serial.print(", took: ");
+  Serial.print(dur);
+  Serial.println(F(" µs"));
+  delay(100);
+  }
 }
 
 void loop() {
-  //Serial.println("ABC");
-  //FEL* extractor = new FEL;
-  boolean start = false;
-  unsigned int pos = 0;
-  char input[2];
-  while (Serial.available() > 0){
-    char next = Serial.read();
-    input[pos] = next;
-    Serial.write(input[pos]);
-    delay(10);
-    //Serial.write("start");
-    pos++;
   
-    if(pos == 2){
-      start = true;
-      Serial.write("stop");
-      break;
-    }
-  }
-  /*
-  if(start){
-    pos = 0;
-    boolean benchmark = false;
-    int featureID = input[0];
-    if(!input[1] == 0){
-      benchmark = true;
-    }
-
-    
-    int dataSize = 10;
-    double data[10] = {0.0, 0.0, 0.1, 0.2, 0.4, 0.5, 0.8, 1.1, 1.6, 2.2};
-    long start = 0;
-    long duration = 0;
-    
-    if(benchmark){
-      start = millis();
-    }
-    double res = extractor->extract_one(data, dataSize, featureID);
-    
-    if(benchmark){
-      long finish = millis();
-      duration = finish - start;
-      Serial.println(duration);
-    }
-    Serial.println(res);
-    start = false;
-    
-  }*/
-
-  
-
- 
   
 }

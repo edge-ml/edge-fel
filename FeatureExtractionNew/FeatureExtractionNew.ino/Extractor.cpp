@@ -142,7 +142,8 @@ float Extractor::avg_dev(vector<float>& values, float my_mean) {
 float Extractor::var(vector<float>& values, float my_mean) {
 	float q_dev = 0;
 	for (auto& value : values) {
-		q_dev += pow(value - my_mean, 2);
+    q_dev += (value - my_mean)*(value - my_mean);
+		//q_dev += pow(value - my_mean, 2);
 	}
 
 	return q_dev / values.size();
@@ -152,7 +153,8 @@ float Extractor::var(vector<float>& values, float my_mean) {
 float Extractor::abs_energy(vector<float>& values) {
 	float sum = 0;
 	for (auto& value : values) {
-		sum += pow(value, 2);
+    sum += (value * value);
+		//sum += pow(value, 2);
 	}
 
 	return sum;
@@ -162,7 +164,8 @@ float Extractor::abs_energy(vector<float>& values) {
 float Extractor::kurtosis(vector<float>& values, float mean, float std_dev) {
 	float sum = 0;
 	for (auto& value : values) {
-		sum += pow((value - mean) / std_dev, 4);
+    float norm = (value - mean) / std_dev;
+		sum += (norm*norm*norm*norm);
 	}
 
 	return sum / values.size();
@@ -172,7 +175,8 @@ float Extractor::kurtosis(vector<float>& values, float mean, float std_dev) {
 float Extractor::skewness(vector<float>& values, float mean, float std_dev) {
 	float sum = 0;
 	for (auto& value : values) {
-		sum += pow((value - mean) / std_dev, 3);
+		float norm = (value - mean) / std_dev;
+    sum += (norm*norm*norm);
 	}
 
 	return sum / values.size();
@@ -286,38 +290,35 @@ float Extractor::mean_n_abs_max(vector<float> values, int n) {
 
 //Returns the mean of the absolute differences of consecutive values
 float Extractor::mean_abs_changes(vector<float>& values) {
-	vector<float> abs_changes;
-	abs_changes.reserve(values.size());
+  float sum_changes = 0.0;
 	for (size_t i = 0; i < values.size() - 1; i++) {
 		float diff = abs(values.at(i) - values.at(i + 1));
-		abs_changes.push_back(diff);
+		sum_changes += diff;
 	}
 
-	return mean(abs_changes);
+	return sum_changes/values.size();
 }
 
 //Returns the mean of differences of consecutive values
 float Extractor::mean_changes(vector<float>& values) {
-	vector<float> changes;
-	changes.reserve(values.size());
+	float sum_changes = 0.0;
 	for (size_t i = 0; i < values.size() - 1; i++) {
 		float diff = values.at(i+1) - values.at(i);
-		changes.push_back(diff);
+		sum_changes += diff;
 	}
 
-	return mean(changes);
+	return sum_changes/values.size();
 }
 
 //Returns the sum of the absolute differences of consecutive values
 float Extractor::abs_sum_of_changes(vector<float>& values) {
-	vector<float> abs_changes;
-	abs_changes.reserve(values.size());
+  float sum = 0.0;
 	for (size_t i = 0; i < values.size() - 1; i++) {
 		float diff = abs(values.at(i) - values.at(i + 1));
-		abs_changes.push_back(diff);
+		sum += diff;
 	}
 
-	return sum(abs_changes);
+	return sum;
 }
 
 //Calculates the absolute differences of all values between the two quantiles and applies the aggregation function
@@ -472,7 +473,7 @@ float Extractor::autocorrelation(vector<float>& values, int lag, float mean, flo
 	for (size_t i = 0; i < values.size() - lag; i++) {
 		sum = (values.at(i) - mean) * (values.at(i + lag) - mean);
 	}
-	float corr = sum / ((values.size() - (float) lag) * pow(var,2));
+	float corr = sum / ((values.size() - (float) lag) * var * var);
 	return corr;
 }
 

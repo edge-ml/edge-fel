@@ -45,7 +45,7 @@ float getCoefficient(vector<cd>& spectralData, unsigned int samplingRate, unsign
 		innerSum = 0.0f;
 		for (k = 0; k < binSize - 1; k++)
 		{
-			innerSum += fabs(sqrt(pow(spectralData[k].imag, 2) + pow(spectralData[k].real, 2)) * GetFilterParameter(samplingRate, binSize, k, l));
+			innerSum += fabs(sqrt(spectralData[k].imag * spectralData[k].imag + spectralData[k].real * spectralData[k].real) * GetFilterParameter(samplingRate, binSize, k, l));
 		}
 
 		if (innerSum > 0.0f)
