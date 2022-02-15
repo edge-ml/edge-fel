@@ -14,7 +14,7 @@ def resolve_cached(feature):
         if p == "root":
             return parent_time
         elif graph.nodes[p]["cached"] == "true":
-            parent_time += read_cache_time - build_and_predict(feature)
+            parent_time += read_cache_time - build_and_predict(p)
         else:
             parent_time += 45 + resolve_cached(p)
             graph.nodes[p]["cached"] = "true"

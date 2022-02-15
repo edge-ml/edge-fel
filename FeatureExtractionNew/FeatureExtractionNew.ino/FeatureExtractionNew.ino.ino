@@ -73,12 +73,13 @@ void loop() {
       
       } else if (strstr(input, "some")){
         char* features = strtok(input, " ");
+        features = strtok(NULL, " ");
         std::map<string, float> results;
         while (features){
           timer = micros();
           float res = delegate.extractOne(features, *values, params);
           dur = micros() - timer;
-          printTime(input, res, dur);
+          printTime(features, res, dur);
           results.emplace(features, res);
           features = strtok(NULL, " ");
         }
