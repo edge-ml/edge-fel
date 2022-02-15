@@ -1,0 +1,36 @@
+Laufzeiten t für features mit Cache
+
+a = t1 = reine Berechnung in Funktion (unabhängiges feature x)
+b = schreiben in Cache (konstant)
+c = lesen aus Cache (konstant)
+d/d' = reine Berechnung in Funktion (abhängiges feature y)
+e = reine Berechnung in Funktion (abhängiges feature z von x und y)
+
+Berechnung feature x (nicht gecached): t3 = a + b
+Berechnung feature x (gecached): t4 = c
+Berechnung feature y (caching deaktiviert): t2/t2' = a + d/d'
+Berechnung feature y (x nicht gecached): t5 = a + b + d
+Berechnung feature y (x gecached) : t6 = c + d
+Berechnung feature z (caching deaktiviert): t7 = a + d + e
+Berechnung feature z (x gecached): t8 = c + d + b + e
+Berechnung feature z (x,y gecached): t9 = c + e
+Berechnung feature z (x,y nicht gecached): t10 = a + b + d + b + e
+
+Vorliegende Laufzeiten: t1 und t2 und t7
+Fall1 (x -> y): t3 + t6 = a + b + c + d = t2 + b + c
+Fall2 (y -> x): t5 + c = a + b + d + c = t2 + b + c
+
+Fall3 (x -> y -> y'): t3 + t6 + t6' = a + b + c + d + c + d' = t2 + t2' - t1 + b + 2c
+Fall4 (y -> x -> y'): t5 + c + t6' = a + b + d + c + c + d' = t2 + t2' - t1 + b + 2c
+Fall5 (y -> y' -> x): t5 + t6' + c = a + b + d + c + d' + c = t2 + t2' - t1 + b + 2c
+
+Fall6 (x -> y -> z): t3 + t6 + b + t9 = a + b + c + d + b + c + e = t7 + 2b + 2c
+Fall7 (y -> x -> z): t5 + b + c + t9 = a + b + c + d + b + c + e = t7 + 2b + 2c
+Fall8 (z -> y -> x): t10 + c + c = a + b + d + b + e + c + c = t7 + 2b + 2c
+Fall9 (z -> x -> y): t10 + c + c = t7 + 2b + 2c
+Fall10 (x -> z -> y): t3 + t8 + c = a + b + c + d + b + e + c = t7 + 2b + 2c
+Fall11 (y -> z -> x): t5 + b + t9 + c = a + b + d + b + c + e + c = t7 + 2b + 2c
+
+Einzelne Laufzeiten:
+Berechnung feature y (x gecached) = t2 - t1 + c
+Berechnung feature y (x nicht gecached) = t2 + b

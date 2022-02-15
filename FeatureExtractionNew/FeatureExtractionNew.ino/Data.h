@@ -9,8 +9,8 @@ public:
 	//static std::vector<float> values_hundred;
   //static std::vector<float> values_five_hundred;
 	//static std::vector<float> values_thousand;
-	//static std::vector<float> values_thousand_fivehundred;
-  static std::vector<float> values_two_thousand;
+	static std::vector<float> values_thousand_fivehundred;
+  //static std::vector<float> values_two_thousand;
 };
 
 #endif
