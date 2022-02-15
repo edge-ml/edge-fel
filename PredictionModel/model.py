@@ -40,24 +40,30 @@ read_cache_time = 55
 graph = nx.DiGraph()
 graph.add_edges_from(
     [("root", "mean"), ("mean", "var"), ("var", "std_dev"), ("std_dev", "kurtosis"), ("mean", "kurtosis"),
-     ("mean", "skewness"), ("std_dev", "skewness"), ("mean", "autocorrelation"), ("var", "autocorrelation")])
+     ("mean", "skewness"), ("std_dev", "skewness"), ("mean", "autocorrelation"), ("var", "autocorrelation"),
+     ("root", "lpc"), ("lpc", "lpcc"), ("root", "fft"), ("fft", "mfcc"), ("root", "abs_energy"),
+     ("abs_energy", "root_mean_square"), ("root", "median"), ("median", "median_abs_dev"),
+     ("max", "first_location_of_max"), ("root", "max"), ("max", "last_location_of_max"), ("root", "min"),
+     ("min", "first_location_of_min"), ("min", "last_location_of_min")])
 # nx.draw(graph, pos=planar_layout(graph), with_labels=True)
 # plt.show()
 
+doCache = False
 running = True
 while running:
-    n = int(input("Enter number of features: "))
-    features = list(input("Enter features: ").strip().split())[:n]
+    features = input("Enter features: ").split()
+    if features == ["all"]:
+        features = all_features
     my_size = int(input("Enter data size: "))
-    print("Predicting runtime for requested size", my_size, "and features:", features)
-    nx.set_node_attributes(graph, "false", name="cached")
+    doCache = bool(str(input("Cache? (y/enter): ")))
 
+    nx.set_node_attributes(graph, "false", name="cached")
     data = pandas.read_csv("runtimes_nicla.csv")
     data_size = numpy.array(data['size']).reshape(-1, 1)
 
     estimated = 0
     for feature in features:
-        if not graph.has_node(feature):
+        if not graph.has_node(feature) or not doCache:
             estimated += build_and_predict(feature)
         elif graph.nodes[feature]["cached"] == "true":
             estimated += read_cache_time
@@ -67,3 +73,4 @@ while running:
                 estimated += write_cache_time
                 graph.nodes[feature]["cached"] = "true"
     print("Feature extraction will take about", estimated, "µs.\n")
+    running = bool(str(input("Continue? (y/enter): ")))
