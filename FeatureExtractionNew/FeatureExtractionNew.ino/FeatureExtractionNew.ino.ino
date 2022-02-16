@@ -107,7 +107,10 @@ void loop() {
       caching = false;
       Serial.println(F("Close session\n")); 
       delay(100);
-      input[pos] = '\0';
+      //Clear input buffer
+      for (int i = 0; i < pos; i++){
+        input[i] = '\0';
+      }
       pos = 0;
     }
   }
