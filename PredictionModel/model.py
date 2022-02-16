@@ -16,7 +16,7 @@ def resolve_cached(feature):
         elif graph.nodes[p]["cached"] == "true":
             parent_time += read_cache_time - build_and_predict(p)
         else:
-            parent_time += 45 + resolve_cached(p)
+            parent_time += write_cache_time + resolve_cached(p)
             graph.nodes[p]["cached"] = "true"
     return parent_time
 
@@ -45,8 +45,6 @@ graph.add_edges_from(
      ("abs_energy", "root_mean_square"), ("root", "median"), ("median", "median_abs_dev"),
      ("max", "first_location_of_max"), ("root", "max"), ("max", "last_location_of_max"), ("root", "min"),
      ("min", "first_location_of_min"), ("min", "last_location_of_min")])
-# nx.draw(graph, pos=planar_layout(graph), with_labels=True)
-# plt.show()
 
 doCache = False
 running = True
