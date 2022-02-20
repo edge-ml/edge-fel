@@ -1,6 +1,34 @@
 import csv
 import serial
 
+default_params = {
+    "mean_n_abs_max_n": 8,
+    "change_quantile_lower": -0.1,
+    "change_quantile_upper": 0.1,
+    "change_quantile_aggr": 0,
+    "range_count_lower": -1,
+    "range_count_upper": 1,
+    "count_above_x": 0,
+    "count_below_x": 0,
+    "quantile_q": 0.5,
+    "autocorrelation_lag": 1,
+    "mfcc_sampling_rate": 100,
+    "mfcc_num_filter": 48,
+    "mfcc_m": 1,
+    "lpc_auto_n": 1,
+    "lpc_n": 1,
+    "lpcc_auto_n": 1,
+    "lpcc_n": 1,
+    "lpcc_cep_length": 1
+}
+
+
+def default_params_to_string():
+    string_params = ""
+    for param, value in default_params.items():
+        string_params += param + ":" + str(value) + " "
+    return string_params[:-1]
+
 
 def normal_mode():
     arduino_input = ""
@@ -14,13 +42,19 @@ def normal_mode():
         i += 1
         j += 1
     features = input("Enter features: ")
-    arduino_input = "transfer data of size\n" + str(data_size) + arduino_input + "\n" + features + "\n"
+    params = input("Enter params: ")
+    if params == "default":
+        params = default_params_to_string()
+    arduino_input = "transfer data of size\n" + str(data_size) + arduino_input + "\n" + features + "\n" + params + "\n"
     port.write(bytes(arduino_input, 'utf-8'))
     print(port.read_until('Close session\n', 10000).decode())
 
 
 def collect_mode():
     board = input("Enter connected Arduino board: ")
+    params = input("Enter params: ")
+    if params == "default":
+        params = default_params_to_string()
     header_written = False
     path = "runtime_results/runtimes_" + board + ".csv"
     with open(path, "w", newline='') as f:
@@ -36,7 +70,8 @@ def collect_mode():
                 k += 1
                 j += 1
 
-            arduino_input = "transfer data of size\n" + str(data_size) + arduino_input + "\nall_iterative\n"
+            arduino_input = "transfer data of size\n" + str(
+                data_size) + arduino_input + "\nall_iterative\n" + params + "\n"
             port.write(bytes(arduino_input, 'utf-8'))
 
             output = port.readlines()
@@ -75,4 +110,5 @@ while running:
 
 port.close()
 
-# Regex Daten: "transfer data of size\n{int size} {float values}\n{string features}\n
+# Regex Daten: "transfer data of size\n{int size} {float values}\n{string features}\n{string params}\n"
+# params = name:value name:value

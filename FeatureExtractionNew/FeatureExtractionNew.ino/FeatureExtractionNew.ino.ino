@@ -14,6 +14,7 @@ using namespace co;
 
 const unsigned int MAX_INPUT_LENGTH = 100;
 const unsigned int START_LENGTH = 25;
+const unsigned int PARAM_LENGTH = 25;
 
 void setup() {
   Serial.begin(115200);
@@ -72,12 +73,30 @@ void loop() {
                 pos++;
 
               } else {
+                std::map<string, float> params;
+                static char param[PARAM_LENGTH];
+                static unsigned int param_pos = 0;
+                delay(100);
+                while (Serial.available() > 0) {
+                   //Check for params
+                   next = Serial.read();
+                   if (next != '\n' && (next >= 'a' && next <= 'z') || next == '_' || next == ' ' || next == ':') {
+                      if (next == ':') {
+                        float param_value = Serial.parseFloat(SKIP_NONE);
+                        params.emplace(param, param_value);
+                        for (int i = 0; i < param_pos; i++) {
+                          param[i] = '\0';
+                        }
+                        param_pos = 0;
+                      } else if (next != ' ') {
+                        param[param_pos] = next;
+                        param_pos++;
+                      }
+                   }
+                }
+                
                 ExtractionDelegate delegate;
                 ExtractionDelegate::doCache = caching;
-                std::map<string, float> params = {{"mean_n_abs_max_n", 8}, {"change_quantile_lower", -0.1}, {"change_quantile_upper", 0.1}, {"change_quantile_aggr", 0}, {"range_count_lower", -1},
-                  {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1}, {"mfcc_sampling_rate", 100}, {"mfcc_num_filter", 48},
-                  {"mfcc_m", 1}, {"lpc_auto_n", values.size()}, {"lpc_n", values.size()}, {"lpcc_auto_n", values.size()}, {"lpcc_n", values.size()}, {"lpcc_cep_length", values.size()}
-                };
                 long dur;
                 Serial.print(F("Starting feature extraction, Caching = "));
                 Serial.println(ExtractionDelegate::doCache);
@@ -150,6 +169,7 @@ void loop() {
                 }
                 pos = 0;
                 values.clear();
+                params.clear();
               }
             }
           }
