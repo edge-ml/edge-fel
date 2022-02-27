@@ -34,7 +34,16 @@ float Extractor::mean_geometric_abs(vector<float>& values) {
 		}
 	}
 	float log_mean = mean(values);
-	return exp(log_mean);*/
+	return exp(log_mean);
+ */
+
+/* for (auto& value : values) {
+   if (value != 0) {
+      value = pow(abs(value), (1.0f / values.size()));
+    }
+  }
+  float log_mean = mean(values);
+  return exp(log_mean);*/
 
 	
 	float product = 1;
@@ -52,14 +61,14 @@ float Extractor::mean_geometric_abs(vector<float>& values) {
   }
   product *= pow(temp, (1.0f / (values.size())));
   return product;
-  
   /*
+  float product = 1;
 	for (auto& value : values) {
 		if (value != 0) {
 			product = product * abs(value);
 		}
 	}
-	return pow(product, ((float)1 / values.size()));
+	return pow(product, (1.0f / values.size()));
 	*/
 }
 

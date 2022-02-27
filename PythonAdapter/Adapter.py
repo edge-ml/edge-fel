@@ -45,6 +45,8 @@ def normal_mode():
     params = input("Enter params: ")
     if params == "default":
         params = default_params_to_string()
+    elif params == "none":
+        params = ""
     arduino_input = "transfer data of size\n" + str(data_size) + arduino_input + "\n" + features + "\n" + params + "\n"
     port.write(bytes(arduino_input, 'utf-8'))
     print(port.read_until('Close session\n', 10000).decode())
@@ -55,11 +57,13 @@ def collect_mode():
     params = input("Enter params: ")
     if params == "default":
         params = default_params_to_string()
+    elif params == "none":
+        params = ""
     header_written = False
     path = "runtime_results/runtimes_" + board + ".csv"
     with open(path, "w", newline='') as f:
         writer = csv.writer(f)
-        for data_size in range(100, 3100, 100):
+        for data_size in range(100, 2100, 100):
             arduino_input = ""
             k = 0
             j = 0
@@ -76,7 +80,7 @@ def collect_mode():
 
             output = port.readlines()
             if not header_written:
-                header = ["size"]
+                header = ["size", "data_transfer", "feature_transfer", "param_transfer"]
                 for line in output:
                     if ":" in line.decode():
                         header.append(line.decode().split()[0].strip(":"))
@@ -86,6 +90,8 @@ def collect_mode():
             for line in output:
                 if ":" in line.decode():
                     body.append(int(line.decode().split()[3]))
+                elif "," in line.decode():
+                    body.append(int(line.decode().split()[4]))
             writer.writerow(body)
 
 

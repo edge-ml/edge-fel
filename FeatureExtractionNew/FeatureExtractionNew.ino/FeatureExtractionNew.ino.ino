@@ -14,7 +14,7 @@ using namespace co;
 
 const unsigned int MAX_INPUT_LENGTH = 100;
 const unsigned int START_LENGTH = 25;
-const unsigned int PARAM_LENGTH = 25;
+const unsigned int PARAM_LENGTH = 1000;
 
 void setup() {
   Serial.begin(115200);
@@ -26,7 +26,7 @@ void loop() {
     static char start[START_LENGTH];
     static unsigned int start_pos = 0;
     char next = Serial.read();
-    
+
     if (next != '\n' && (next >= 'a' && next <= 'z') || next == ' ') {
       start[start_pos] = next;
       start_pos++;
@@ -34,14 +34,18 @@ void loop() {
     } else if (start_pos == 0) {
       //Discard floating bytes in input buffer
       continue;
-      
+
     } else {
+      long dur;
+      long timer;
+
       //Either read end of line or non valid character
       if (strcmp(start, "transfer data of size ")) {
-        static long data_size = 0;
         Serial.println("Start transfer of data");
+        timer = micros();
+        static long data_size = 0;
         //Read size of dataset
-        data_size = Serial.parseInt(); 
+        data_size = Serial.parseInt();
         static vector<float> values;
         values.reserve(data_size);
 
@@ -55,11 +59,16 @@ void loop() {
 
             //End of line signals end of dataset
           } else if (next == '\n') {
-            Serial.println("Data transfer finished");
+            dur = micros() - timer;
+            Serial.print("Data transfer finished, took ");
+            Serial.print(dur);
+            Serial.println(F(" µs"));
+
+            Serial.println("Start transfer of features");
+            timer = micros();
             static char input[MAX_INPUT_LENGTH];
             static char pos = 0;
             static boolean caching = false;
-            delay(10);
             while (Serial.available() > 0) {
               //Check for requested features
               next = Serial.read();
@@ -73,34 +82,47 @@ void loop() {
                 pos++;
 
               } else {
+                dur = micros() - timer;
+                Serial.print("Feature transfer finished, took ");
+                Serial.print(dur);
+                Serial.println(F(" µs"));
+
+                delay(100);
+                
+                Serial.println("Start transfer of params");
+                timer = micros();
                 std::map<string, float> params;
                 static char param[PARAM_LENGTH];
                 static unsigned int param_pos = 0;
-                delay(100);
+ 
                 while (Serial.available() > 0) {
-                   //Check for params
-                   next = Serial.read();
-                   if (next != '\n' && (next >= 'a' && next <= 'z') || next == '_' || next == ' ' || next == ':') {
-                      if (next == ':') {
-                        float param_value = Serial.parseFloat(SKIP_NONE);
-                        params.emplace(param, param_value);
-                        for (int i = 0; i < param_pos; i++) {
-                          param[i] = '\0';
-                        }
-                        param_pos = 0;
-                      } else if (next != ' ') {
-                        param[param_pos] = next;
-                        param_pos++;
+                  //Check for params
+                  next = Serial.read();
+                  if (next != '\n' && (next >= 'a' && next <= 'z') || next == '_' || next == ' ' || next == ':') {
+                    if (next == ':') {
+                      float param_value = Serial.parseFloat(SKIP_NONE);
+                      params.emplace(param, param_value);
+                      for (int i = 0; i < param_pos; i++) {
+                        param[i] = '\0';
                       }
-                   }
+                      param_pos = 0;
+                    } else if (next != ' ') {
+                      param[param_pos] = next;
+                      param_pos++;
+                    }
+                  } 
                 }
+                dur = micros() - timer;
+                Serial.print("Param transfer finished, took ");
+                Serial.print(dur);
+                Serial.println(F(" µs"));
                 
                 ExtractionDelegate delegate;
                 ExtractionDelegate::doCache = caching;
-                long dur;
-                Serial.print(F("Starting feature extraction, Caching = "));
+                //long dur;
+                Serial.print(F("Starting feature extraction with caching = "));
                 Serial.println(ExtractionDelegate::doCache);
-                long timer;
+                //long timer;
                 if (strcmp(input, "all") == 0) {
                   timer = micros();
                   std::map<string, float> results = delegate.extractAll(values, params);
@@ -162,12 +184,16 @@ void loop() {
                 ExtractionDelegate::calculated.clear();
                 caching = false;
                 Serial.println(F("Close session\n"));
-                delay(100);
                 //Clear input buffer
                 for (int i = 0; i < pos; i++) {
                   input[i] = '\0';
                 }
                 pos = 0;
+                //Clear param buffer
+                for (int i = 0; i < param_pos; i++) {
+                  param[i] = '\0';
+                }
+                param_pos = 0;
                 values.clear();
                 params.clear();
               }
