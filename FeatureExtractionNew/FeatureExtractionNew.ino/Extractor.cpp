@@ -50,7 +50,7 @@ float Extractor::mean_geometric_abs(vector<float>& values) {
   float temp = 1;
   for (int i = 0; i < values.size(); i++){
     if (values.at(i) != 0){
-      if (i % 50 == 0 && i != 0){
+      if (i % 30 == 0 && i != 0){
         product *= pow(temp, (1.0f / values.size()));
         temp = 1;
       } 
@@ -175,6 +175,7 @@ float Extractor::kurtosis(vector<float>& values, float mean, float std_dev) {
 	for (auto& value : values) {
     float norm = (value - mean) / std_dev;
 		sum += (norm*norm*norm*norm);
+   //sum += pow(norm,4);
 	}
 
 	return sum / values.size();
@@ -186,6 +187,7 @@ float Extractor::skewness(vector<float>& values, float mean, float std_dev) {
 	for (auto& value : values) {
 		float norm = (value - mean) / std_dev;
     sum += (norm*norm*norm);
+    //sum += pow(norm,3);
 	}
 
 	return sum / values.size();

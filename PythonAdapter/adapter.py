@@ -1,5 +1,6 @@
 import csv
 import serial
+import predictor
 
 default_params = {
     "mean_n_abs_max_n": 8,
@@ -30,7 +31,7 @@ def default_params_to_string():
     return string_params[:-1]
 
 
-def normal_mode():
+def default_mode():
     arduino_input = ""
     data_size = int(input("Enter requested size of data: "))
     i = 0
@@ -63,7 +64,8 @@ def collect_mode():
     path = "runtime_results/runtimes_" + board + ".csv"
     with open(path, "w", newline='') as f:
         writer = csv.writer(f)
-        for data_size in range(100, 2100, 100):
+        data_size = 10
+        while data_size <= 2000:
             arduino_input = ""
             k = 0
             j = 0
@@ -93,13 +95,17 @@ def collect_mode():
                 elif "," in line.decode():
                     body.append(int(line.decode().split()[4]))
             writer.writerow(body)
+            if data_size < 100:
+                data_size += 10
+            else:
+                data_size += 100
 
 
-mode = input("Enter user mode (normal/collect): ")
+mode = input("Enter user mode (default/collect/predict): ")
 port = serial.Serial('COM3', 115200, timeout=1)
 running = True
 while running:
-    dataset_name = input("Enter path of dataset: ")
+    dataset_name = input("Enter path to dataset: ")
     if not dataset_name == "default":
         file = open(dataset_name)
     else:
@@ -107,10 +113,12 @@ while running:
     reader = csv.reader(file)
     data = list(next(reader))
 
-    if mode == "normal":
-        normal_mode()
+    if mode == "default":
+        default_mode()
     elif mode == "collect":
         collect_mode()
+    elif mode == "predict":
+        predictor.run()
 
     running = bool(str(input("Continue? (y/enter): ")))
 

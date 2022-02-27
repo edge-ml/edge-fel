@@ -3,27 +3,36 @@ import pandas
 import networkx as nx
 
 from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
 
 
-def resolve_cached(feature):
+def resolve_cached(feature, data, data_size, my_size):
     parents = list(graph.predecessors(feature))
     parent_time = 0
     for p in parents:
         if p == "root":
             return parent_time
         elif graph.nodes[p]["cached"] == "true":
-            parent_time += read_cache_time - build_and_predict(p)
+            parent_time += read_cache_time - build_and_predict(p, data, data_size, my_size)
         else:
-            parent_time += write_cache_time + resolve_cached(p)
+            parent_time += write_cache_time + resolve_cached(p, data, data_size, my_size)
             graph.nodes[p]["cached"] = "true"
     return parent_time
 
 
-def build_and_predict(f):
+def build_and_predict(f, data, data_size, my_size):
     runtimes = data[f]
-    regress = LinearRegression().fit(data_size, runtimes)
-    regress.r
-    return int(regress.predict(numpy.array([my_size]).reshape(-1, 1)))
+    lin = LinearRegression().fit(data_size, runtimes)
+    lin_score = lin.score(data_size, runtimes)
+
+    poly_features = PolynomialFeatures(degree=2).fit_transform(data_size)
+    poly = LinearRegression().fit(poly_features, runtimes)
+    poly_score = poly.score(poly_features, runtimes)
+    print(f + " LinR: " + str(lin_score) + ", PolyR:" + str(poly_score))
+    if lin_score > poly_score:
+        return int(lin.predict(numpy.array([my_size]).reshape(-1, 1)))
+    else:
+        return int(lin.predict(numpy.array([my_size]).reshape(-1, 1)))
 
 
 all_features = ["size", "abs_energy", "abs_max", "abs_sum_of_changes", "avg_dev", "count_above_mean",
@@ -45,29 +54,28 @@ graph.add_edges_from(
      ("max", "first_location_of_max"), ("root", "max"), ("max", "last_location_of_max"), ("root", "min"),
      ("min", "first_location_of_min"), ("min", "last_location_of_min")])
 
-doCache = False
-running = True
-while running:
+
+def run():
     features = input("Enter features: ").split()
     if features == ["all"]:
         features = all_features
     my_size = int(input("Enter data size: "))
-    doCache = bool(str(input("Cache? (y/enter): ")))
+    do_cache = bool(str(input("Cache? (y/enter): ")))
     platform = input("Enter board: ")
-    data = pandas.read_csv("runtimes_" + platform + ".csv")
-    nx.set_node_attributes(graph, "false", name="cached")
+    path = "runtime_results/runtimes_" + platform + ".csv"
+    data = pandas.read_csv(path)
     data_size = numpy.array(data['size']).reshape(-1, 1)
+    nx.set_node_attributes(graph, "false", name="cached")
 
     estimated = 0
     for feature in features:
-        if not graph.has_node(feature) or not doCache:
-            estimated += build_and_predict(feature)
+        if not graph.has_node(feature) or not do_cache:
+            estimated += build_and_predict(feature, data, data_size, my_size)
         elif graph.nodes[feature]["cached"] == "true":
             estimated += read_cache_time
         else:
-            estimated += build_and_predict(feature) + resolve_cached(feature)
+            estimated += build_and_predict(feature, data, data_size, my_size) + resolve_cached(feature, data, data_size, my_size)
             if len(list(graph.successors(feature))) > 0:
                 estimated += write_cache_time
                 graph.nodes[feature]["cached"] = "true"
     print("Feature extraction will take about", estimated, "µs.\n")
-    running = bool(str(input("Continue? (y/enter): ")))
