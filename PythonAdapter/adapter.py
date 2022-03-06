@@ -109,7 +109,7 @@ while running:
     if not dataset_name == "default":
         file = open(dataset_name)
     else:
-        file = open("datasets/data_1k.csv")
+        file = open("datasets/data_random.csv")
     reader = csv.reader(file)
     data = list(next(reader))
 

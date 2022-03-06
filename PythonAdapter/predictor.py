@@ -28,7 +28,7 @@ def build_and_predict(f, data, data_size, my_size):
     poly_features = PolynomialFeatures(degree=2).fit_transform(data_size)
     poly = LinearRegression().fit(poly_features, runtimes)
     poly_score = poly.score(poly_features, runtimes)
-    print(f + " LinR: " + str(lin_score) + ", PolyR:" + str(poly_score))
+    # print(f + " LinR: " + str(lin_score) + ", PolyR:" + str(poly_score))
     if lin_score > poly_score:
         return int(lin.predict(numpy.array([my_size]).reshape(-1, 1)))
     else:
