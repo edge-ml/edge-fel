@@ -9,55 +9,55 @@ using namespace co;
 bool ExtractionDelegate::doCache = false;
 std::map<string, float> ExtractionDelegate::calculated;
 ExtractionHandler handler;
-vector<string> ExtractionDelegate::parameterFeatures = {"mean_n_abs_max",  "change_quantile", "range_count", "count_above", "count_below", "quantile", "autocorrelation"};
+vector<string> ExtractionDelegate::parameterFeatures = { "mean_n_abs_max",  "change_quantile", "range_count", "count_above", "count_below", "quantile", "autocorrelation" };
 
 //Extracts the requested feature from the data, doesnt include features which return a list
 float ExtractionDelegate::extractOne(string feature, vector<float>& values, std::map<string, float>& params) {
-		if (feature == "mean_n_abs_max" && params.find("mean_n_abs_max_n") != params.end()) {
-			return handler.handle_mean_n_abs_max(feature, values, params.at("mean_n_abs_max_n"));
-		}
-		else if (feature == "change_quantile" && params.find("change_quantile_lower") != params.end() && params.find("change_quantile_upper") != params.end() && params.find("change_quantile_aggr") != params.end()) {
-			return handler.handle_change_quantile(feature, values, params.at("change_quantile_lower"), params.at("change_quantile_upper"), params.at("change_quantile_aggr"));
-		}
-		else if (feature == "range_count" && params.find("range_count_lower") != params.end() && params.find("range_count_upper") != params.end()) {
-			return handler.handle_range_count(feature, values, params.at("range_count_lower"), params.at("range_count_upper"));
-		}
-		else if (feature == "count_above" && params.find("count_above_x") != params.end()) {
-			return handler.handle_count_above(feature, values, params.at("count_above_x"));
-		}
-		else if (feature == "count_below" && params.find("count_below_x") != params.end()) {
-			return handler.handle_count_below(feature, values, params.at("count_below_x"));
-		}
-		else if (feature == "quantile" && params.find("quantile_q") != params.end()) {
-			return handler.handle_quantile(feature, values, params.at("quantile_q"));
-		}
-		else if (feature == "autocorrelation" && params.find("autocorrelation_lag") != params.end()) {
-			return handler.handle_autocorrelation(feature, values, params.at("autocorrelation_lag"));
-		}
-		else {
-			auto iter = ExtractionDelegate::handlers.find(feature);
-			if (!(iter == ExtractionDelegate::handlers.end())) {
-				return (handler.*(iter->second))(feature, values);
-			}
-			return 0.0;
-		}
+	auto iter = ExtractionDelegate::handlers.find(feature);
+	if (!(iter == ExtractionDelegate::handlers.end())) {
+		return (handler.*(iter->second))(feature, values);
+	}
+	else if (feature == "mean_n_abs_max" && params.find("mean_n_abs_max_n") != params.end()) {
+		return handler.handle_mean_n_abs_max(feature, values, params.at("mean_n_abs_max_n"));
+	}
+	else if (feature == "change_quantile" && params.find("change_quantile_lower") != params.end() && params.find("change_quantile_upper") != params.end() && params.find("change_quantile_aggr") != params.end()) {
+		return handler.handle_change_quantile(feature, values, params.at("change_quantile_lower"), params.at("change_quantile_upper"), params.at("change_quantile_aggr"));
+	}
+	else if (feature == "range_count" && params.find("range_count_lower") != params.end() && params.find("range_count_upper") != params.end()) {
+		return handler.handle_range_count(feature, values, params.at("range_count_lower"), params.at("range_count_upper"));
+	}
+	else if (feature == "count_above" && params.find("count_above_x") != params.end()) {
+		return handler.handle_count_above(feature, values, params.at("count_above_x"));
+	}
+	else if (feature == "count_below" && params.find("count_below_x") != params.end()) {
+		return handler.handle_count_below(feature, values, params.at("count_below_x"));
+	}
+	else if (feature == "quantile" && params.find("quantile_q") != params.end()) {
+		return handler.handle_quantile(feature, values, params.at("quantile_q"));
+	}
+	else if (feature == "autocorrelation" && params.find("autocorrelation_lag") != params.end()) {
+		return handler.handle_autocorrelation(feature, values, params.at("autocorrelation_lag"));
+	}
+	else {
+		return 0.0;
+	}
 }
 
 
 //Extracts the requested feature from the data which return a list of floats. Fft is not included here!
 vector<float> ExtractionDelegate::extractOneVectorial(string feature, vector<float>& values, std::map<string, float>& params) {
 	if (feature == "mfcc" && params.find("mfcc_sampling_rate") != params.end() && params.find("mfcc_num_filter") != params.end() && params.find("mfcc_m") != params.end()) {
-      return handler.handle_mfcc(feature, values, params.at("mfcc_sampling_rate"), params.at("mfcc_num_filter"), params.at("mfcc_m"));
-    }
-    else if (feature == "lpc" && params.find("lpc_auto_n") != params.end() && params.find("lpc_n") != params.end()) {
-      return handler.handle_lpc(feature, values, params.at("lpc_auto_n"), params.at("lpc_n"));
-    }
-    else if (feature == "lpcc" && params.find("lpcc_auto_n") != params.end() && params.find("lpcc_n") != params.end() && params.find("lpcc_cep_length") != params.end()) {
-      return handler.handle_lpcc(feature, values, params.at("lpcc_auto_n"), params.at("lpcc_n"), params.at("lpcc_cep_length"));
-    }
-    else {
-      return {};
-    }
+		return handler.handle_mfcc(feature, values, params.at("mfcc_sampling_rate"), params.at("mfcc_num_filter"), params.at("mfcc_m"));
+	}
+	else if (feature == "lpc" && params.find("lpc_auto_n") != params.end() && params.find("lpc_n") != params.end()) {
+		return handler.handle_lpc(feature, values, params.at("lpc_auto_n"), params.at("lpc_n"));
+	}
+	else if (feature == "lpcc" && params.find("lpcc_auto_n") != params.end() && params.find("lpcc_n") != params.end() && params.find("lpcc_cep_length") != params.end()) {
+		return handler.handle_lpcc(feature, values, params.at("lpcc_auto_n"), params.at("lpcc_n"), params.at("lpcc_cep_length"));
+	}
+	else {
+		return {};
+	}
 }
 
 //Extracts the requested features from the data, doesnt include features which return a list
@@ -67,7 +67,7 @@ std::map<string, float> ExtractionDelegate::extractSome(vector<string>& features
 		float value = extractOne(feature, values, params);
 		results.emplace(feature, value);
 	}
-    
+
 	return results;
 }
 
@@ -132,5 +132,5 @@ void ExtractionDelegate::fillHandlerMap() {
 	ExtractionDelegate::handlers.emplace("interquartile_range", &ExtractionHandler::handle_interquartile_range);
 	ExtractionDelegate::handlers.emplace("negative_turnings", &ExtractionHandler::handle_negative_turnings);
 	ExtractionDelegate::handlers.emplace("positive_turnings", &ExtractionHandler::handle_positive_turnings);
-	
+
 }

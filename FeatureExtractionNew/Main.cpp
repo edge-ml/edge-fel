@@ -8,6 +8,8 @@
 #include <ctime>
 #include "FeatureExtractionNew.ino/Cmplx.h"
 
+#include <chrono>
+
 using namespace eh;
 using namespace ed;
 using namespace std;
@@ -15,9 +17,9 @@ using namespace ex;
 using namespace co;
 
 //missing: "mean_geometric","avg_dev", "change_quantile", "non_zero_count", "count_above",  "count_below",
-map<string, double> featuresAndResults1k = { {"mean", 0.0048368} , {"mean_abs_dev", 1.9915990}, {"median", 0.060006}, {"median_abs_changes", 2.5281278},
+map<string, float> featuresAndResults1k = { {"mean", 0.0048368} , {"mean_abs_dev", 1.9915990}, {"median", 0.060006}, {"median_abs_changes", 2.5281278},
 	{"median_changes", -0.0531599}, {"median_abs_dev", 1.9915990}, {"std_dev", 2.3068508}, {"var", 5.3215605}, {"abs_energy", 5321.58}, {"kurtosis", -1.1818654},
-	{"skewness", -0.0241072}, {"zero_cross", (double)529 / 1000}, {"max", 3.9785828}, {"abs_max", 3.9990850}, {"min", -3.9990850}, {"last_location_of_max", 110},
+	{"skewness", -0.0241072}, {"zero_cross", (float)529 / 1000}, {"max", 3.9785828}, {"abs_max", 3.9990850}, {"min", -3.9990850}, {"last_location_of_max", 110},
 	{"last_location_of_min", 3}, {"first_location_of_max", 109}, {"first_location_of_min", 2}, {"mean_n_abs_max_values", 1.35463}, {"mean_abs_changes", 2.74237},
 	{"mean_changes", 0.0028625 }, {"abs_sum_of_changes", 2739.63}, {"sum", 4.8367956}, {"range_count", 262}, {"count_above_mean", 0.506},
 	{"count_below_mean", 0.494}, {"root_mean_square", 2.3068558}, {"quantile", 0.0600065}, {"interquartile_range", 3.9898933}, {"negative_turnings", 351},
@@ -26,7 +28,7 @@ map<string, double> featuresAndResults1k = { {"mean", 0.0048368} , {"mean_abs_de
 
 
 //missing: "change_quantile"
-map<string, double> featuresAndResults10 = { {"mean", 0.3} , {"mean_abs_dev", 1.9}, {"median", 0.5}, {"median_abs_changes", 3.0},
+map<string, float> featuresAndResults10 = { {"mean", 0.3} , {"mean_abs_dev", 1.9}, {"median", 0.5}, {"median_abs_changes", 3.0},
 	{"median_changes", 0.5}, {"median_abs_dev", 1.5}, {"std_dev", 2.2045407}, {"var", 4.85999999}, {"abs_energy", 49.5}, {"kurtosis", -0.7950007 /*-0.4411620*/},
 	{"skewness", -0.3967680 /*-0.470509*/}, {"zero_cross", 0.3}, {"max", 3.5}, {"abs_max", 4.0}, {"min", -4.0}, {"last_location_of_max", 5},
 	{"last_location_of_min", 7}, {"first_location_of_max", 5}, {"first_location_of_min", 7}, {"mean_n_abs_max", 2.25}, {"mean_abs_changes", 2.777777},
@@ -38,41 +40,29 @@ int main() {
 		
 	//testExtractAll(Data::values_ten, featuresAndResults10);
 	//testExtractOne(Data::values_ten, featuresAndResults10);
-
-	vector<double> values = Data::values_thousand;
-	ExtractionDelegate delegate;
-	ExtractionDelegate::doCache = true;
-	map<string, double> params = { {"mean_n_abs_max_n", 8}, {"change_quantile_lower", -0.1}, {"change_quantile_upper", 0.1}, {"change_quantile_aggr", 0},
-		{"range_count_lower", -1}, {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1},
-		{"mfcc_sampling_rate", 100}, {"mfcc_num_filter", 48}, {"mfcc_m", 1}, {"lpc_auto_n", values.size()}, {"lpc_n", values.size()}, {"lpcc_auto_n", values.size()}, 
-		{"lpcc_n", values.size()}, {"lpcc_cep_length", values.size()} };
-
-	vector<double> coeffs = delegate.extractOneVectorial("lpc", values, params);
-	coeffs = delegate.extractOneVectorial("lpcc", values, params);
-
 	
-	
-	
-	/*
 	for (int i = 0; i < 10; i++) {
-		vector<double> values = Data::values_thousand;
+		vector<float> values = Data::values_thousand;
 		ExtractionDelegate delegate;
 		ExtractionDelegate::doCache = true;
 
-		map<string, double> params = { {"mean_n_abs_max_n", 8}, {"change_quantile_lower", -0.1}, {"change_quantile_upper", 0.1}, {"change_quantile_aggr", 0},
-			{"range_count_lower", -1}, {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1} };
+		map<string, float> params = { /*{"mean_n_abs_max_n", 8}, {"change_quantile_lower", -0.1}, {"change_quantile_upper", 0.1}, {"change_quantile_aggr", 0},
+			{"range_count_lower", -1}, {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5},*/ {"autocorrelation_lag", 1} };
 
 		string caching = ExtractionDelegate::doCache ? "activated" : "not active";
 		cout << "Starting feature extraction, caching " << caching << "\n";
 
-		clock_t start, end;
-		start = clock();
-		map<string, double> results = delegate.extractAll(values, params);
-		end = clock();
+		auto start = std::chrono::steady_clock::now();
+		float result = delegate.extractOne("autocorrelation", values, params);
+		auto end = std::chrono::steady_clock::now();
+		auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-		cout << "Feature extraction finished, took: " << ((double)end - start) / CLOCKS_PER_SEC << "\n";
+		
+
+
+		cout << "Feature extraction finished, took: " << elapsed.count() << "\n";
 		ExtractionDelegate::calculated.clear();
-	}*/
+	}
 }
 
 
