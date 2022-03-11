@@ -101,8 +101,8 @@ void ExtractionDelegate::fillHandlerMap() {
 	ExtractionDelegate::handlers.emplace("mean_abs_dev", &ExtractionHandler::handle_mean_abs_dev);
 	ExtractionDelegate::handlers.emplace("mean_geometric_abs", &ExtractionHandler::handle_mean_geometric_abs);
 	ExtractionDelegate::handlers.emplace("median", &ExtractionHandler::handle_median);
-	ExtractionDelegate::handlers.emplace("median_abs_diff", &ExtractionHandler::handle_median_abs_changes);
-	ExtractionDelegate::handlers.emplace("median_diff", &ExtractionHandler::handle_median_changes);
+	ExtractionDelegate::handlers.emplace("median_abs_changes", &ExtractionHandler::handle_median_abs_changes);
+	ExtractionDelegate::handlers.emplace("median_changes", &ExtractionHandler::handle_median_changes);
 	ExtractionDelegate::handlers.emplace("median_abs_dev", &ExtractionHandler::handle_median_abs_dev);
 	ExtractionDelegate::handlers.emplace("std_dev", &ExtractionHandler::handle_std_dev);
 	ExtractionDelegate::handlers.emplace("avg_dev", &ExtractionHandler::handle_avg_dev);
@@ -120,8 +120,8 @@ void ExtractionDelegate::fillHandlerMap() {
 	ExtractionDelegate::handlers.emplace("first_location_of_max", &ExtractionHandler::handle_first_location_of_max);
 	ExtractionDelegate::handlers.emplace("first_location_of_min", &ExtractionHandler::handle_first_location_of_min);
 
-	ExtractionDelegate::handlers.emplace("mean_abs_change", &ExtractionHandler::handle_mean_abs_changes);
-	ExtractionDelegate::handlers.emplace("mean_change", &ExtractionHandler::handle_mean_changes);
+	ExtractionDelegate::handlers.emplace("mean_abs_changes", &ExtractionHandler::handle_mean_abs_changes);
+	ExtractionDelegate::handlers.emplace("mean_changes", &ExtractionHandler::handle_mean_changes);
 	ExtractionDelegate::handlers.emplace("abs_sum_of_changes", &ExtractionHandler::handle_abs_sum_of_changes);
 
 	ExtractionDelegate::handlers.emplace("sum", &ExtractionHandler::handle_sum);

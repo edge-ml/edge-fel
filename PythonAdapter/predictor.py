@@ -37,8 +37,8 @@ def build_and_predict(f, data, data_size, my_size):
 
 all_features = ["size", "abs_energy", "abs_max", "abs_sum_of_changes", "avg_dev", "count_above_mean",
                 "count_below_mean", "first_location_of_max", "first_location_of_min", "interquartile_range", "kurtosis",
-                "last_location_of_max", "last_location_of_min", "max", "mean", "mean_abs_change", "mean_abs_dev",
-                "mean_change", "mean_geometric_abs", "median", "median_abs_dev", "median_abs_diff", "median_diff",
+                "last_location_of_max", "last_location_of_min", "max", "mean", "mean_abs_changes", "mean_abs_dev",
+                "mean_changes", "mean_geometric_abs", "median", "median_abs_dev", "median_abs_changes", "median_changes",
                 "min", "negative_turnings", "non_zero_count", "positive_turnings", "root_mean_square", "skewness",
                 "std_dev", "sum", "var", "zero_cross", "mean_n_abs_max", "change_quantile", "range_count",
                 "count_above", "count_below", "quantile", "autocorrelation"]

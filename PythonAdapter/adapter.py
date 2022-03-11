@@ -52,6 +52,28 @@ def default_mode():
     port.write(bytes(arduino_input, 'utf-8'))
     print(port.read_until('Close session\n', 10000).decode())
 
+def compare_mode():
+    params = default_params_to_string()
+    data_size = 10
+    while data_size <= 2000:
+        arduino_input = ""
+        k = 0
+        j = 0
+        while k < data_size:
+            if not j < len(data):
+                j = 0
+            arduino_input += " " + str(data[j])
+            k += 1
+            j += 1
+
+        arduino_input = "transfer data of size\n" + str(data_size) + arduino_input + "\nall1\n" + params + "\n"
+        port.write(bytes(arduino_input, 'utf-8'))
+        print(port.read_until('Close session\n', 10000).decode())
+
+        if data_size < 100:
+            data_size += 10
+        else:
+            data_size += 100
 
 def collect_mode():
     board = input("Enter connected Arduino board: ")
@@ -119,7 +141,8 @@ while running:
         collect_mode()
     elif mode == "predict":
         predictor.run()
-
+    elif mode == "compare":
+        compare_mode()
     running = bool(str(input("Continue? (y/enter): ")))
 
 port.close()

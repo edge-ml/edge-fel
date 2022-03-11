@@ -37,32 +37,70 @@ map<string, float> featuresAndResults10 = { {"mean", 0.3} , {"mean_abs_dev", 1.9
 	{"positive_turnings", 2}, {"autocorrelation",  0.0322359}, {"mean_geometric_abs", 1.75677 }, {"avg_dev", 1.9 }, {"non_zero_count", 9}, {"count_above", 0.5 }, {"count_below", 0.4} };
 
 int main() {
-		
+
 	//testExtractAll(Data::values_ten, featuresAndResults10);
 	//testExtractOne(Data::values_ten, featuresAndResults10);
-	
-	for (int i = 0; i < 10; i++) {
-		vector<float> values = Data::values_thousand;
-		ExtractionDelegate delegate;
-		ExtractionDelegate::doCache = true;
 
-		map<string, float> params = { /*{"mean_n_abs_max_n", 8}, {"change_quantile_lower", -0.1}, {"change_quantile_upper", 0.1}, {"change_quantile_aggr", 0},
-			{"range_count_lower", -1}, {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5},*/ {"autocorrelation_lag", 1} };
+	map<string, float> params = { {"mean_n_abs_max_n", 8}, {"change_quantile_lower", -0.1}, {"change_quantile_upper", 0.1}, {"change_quantile_aggr", 0},
+			{"range_count_lower", -1}, {"range_count_upper", 1}, {"count_above_x", 0}, {"count_below_x", 0}, {"quantile_q", 0.5}, {"autocorrelation_lag", 1} };
 
-		string caching = ExtractionDelegate::doCache ? "activated" : "not active";
-		cout << "Starting feature extraction, caching " << caching << "\n";
+	/*vector<string> features:tsfresh = { "abs_energy" , "abs_sum_of_changes", "autocorrelation", "count_above", "count_above_mean", "count_below", "count_below_mean", "first_location_of_max",
+	"first_location_of_min", "kurtosis", "last_location_of_max", "last_location_of_min", "max", "mean", "mean_abs_changes", "mean_changes", "median", "min", "zero_cross",
+	"quantile","range_count", "root_mean_square", "skewness", "std_dev", "sum", "var" };*/
 
-		auto start = std::chrono::steady_clock::now();
-		float result = delegate.extractOne("autocorrelation", values, params);
-		auto end = std::chrono::steady_clock::now();
-		auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+	/*vector<string> features_tsfel = { "mean", "mean_abs_dev", "median", "median_abs_changes", "median_changes", "median_abs_dev", "std_dev",
+			"var", "abs_energy", "kurtosis", "skewness", "zero_cross", "max", "min", "mean_abs_changes", "mean_changes",
+			"abs_sum_of_changes", "root_mean_square", "interquartile_range", "negative_turnings",
+			"positive_turnings", "autocorrelation" };*/
 
-		
+	vector<string> features = { "mean", "var", "std_dev", "avg_dev", "skewness", "kurtosis", "zero_cross", "root_mean_square", "sum", "min", "max", "non_zero_count" };
 
+	vector<float> values = Data::values_thousand;
+	ExtractionDelegate delegate;
+	ExtractionDelegate::doCache = false;
 
-		cout << "Feature extraction finished, took: " << elapsed.count() << "\n";
-		ExtractionDelegate::calculated.clear();
+	map<string, long long> runtimes;
+	for (auto f : features) {
+		runtimes.emplace(f, 0);
 	}
+
+	for (int i = 0; i < 100; i++) {
+		for (auto iter : runtimes) {
+			auto start = std::chrono::steady_clock::now();
+			float result = delegate.extractOne(iter.first, values, params);
+			auto end = std::chrono::steady_clock::now();
+			auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+			runtimes[iter.first] = iter.second +=elapsed.count();
+		}
+	}
+	long long sum = 0;
+	for (auto iter : runtimes) {
+		cout << iter.first << " took " << iter.second / 100.0f << " nanoseconds.\n";
+		sum += iter.second / 100.0f;
+	}
+	cout << "Total time: " << sum << " nanoseconds.\n";
+
+	sum = 0;
+	for (int i = 0; i < 100; i++) {
+		auto start = std::chrono::steady_clock::now();
+		map<string, float> result = delegate.extractSome(features, values, params);
+		auto end = std::chrono::steady_clock::now();
+		auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+		sum += elapsed.count();
+	}
+	cout << "Total time with extract some: " << sum / 100.0f << " nanoseconds.\n";
+
+	ExtractionDelegate::doCache = true;
+	sum = 0;
+	for (int i = 0; i < 100; i++) {
+		auto start = std::chrono::steady_clock::now();
+		map<string, float> result = delegate.extractSome(features, values, params);
+		auto end = std::chrono::steady_clock::now();
+		auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+		sum += elapsed.count();
+		delegate.calculated.clear();
+	}
+	cout << "Total time with extract some and caching: " << sum / 100.0f << " nanoseconds.\n";
 }
 
 
