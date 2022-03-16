@@ -38,7 +38,8 @@ def build_and_predict(f, data, data_size, my_size):
 all_features = ["size", "abs_energy", "abs_max", "abs_sum_of_changes", "avg_dev", "count_above_mean",
                 "count_below_mean", "first_location_of_max", "first_location_of_min", "interquartile_range", "kurtosis",
                 "last_location_of_max", "last_location_of_min", "max", "mean", "mean_abs_changes", "mean_abs_dev",
-                "mean_changes", "mean_geometric_abs", "median", "median_abs_dev", "median_abs_changes", "median_changes",
+                "mean_changes", "mean_geometric_abs", "median", "median_abs_dev", "median_abs_changes",
+                "median_changes",
                 "min", "negative_turnings", "non_zero_count", "positive_turnings", "root_mean_square", "skewness",
                 "std_dev", "sum", "var", "zero_cross", "mean_n_abs_max", "change_quantile", "range_count",
                 "count_above", "count_below", "quantile", "autocorrelation"]
@@ -52,7 +53,8 @@ graph.add_edges_from(
      ("root", "lpc"), ("lpc", "lpcc"), ("root", "fft"), ("fft", "mfcc"), ("root", "abs_energy"),
      ("abs_energy", "root_mean_square"), ("root", "median"), ("median", "median_abs_dev"),
      ("max", "first_location_of_max"), ("root", "max"), ("max", "last_location_of_max"), ("root", "min"),
-     ("min", "first_location_of_min"), ("min", "last_location_of_min")])
+     ("min", "first_location_of_min"), ("min", "last_location_of_min"), ("mean", "avg_dev"), ("mean", "mean_abs_dev"),
+     ("mean", "count_above_mean"), ("mean", "count_below_mean")])
 
 
 def run():
@@ -74,7 +76,8 @@ def run():
         elif graph.nodes[feature]["cached"] == "true":
             estimated += read_cache_time
         else:
-            estimated += build_and_predict(feature, data, data_size, my_size) + resolve_cached(feature, data, data_size, my_size)
+            estimated += build_and_predict(feature, data, data_size, my_size) + resolve_cached(feature, data, data_size,
+                                                                                               my_size)
             if len(list(graph.successors(feature))) > 0:
                 estimated += write_cache_time
                 graph.nodes[feature]["cached"] = "true"
