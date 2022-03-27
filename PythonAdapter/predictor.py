@@ -25,24 +25,23 @@ def build_and_predict(f, data, data_size, my_size):
     lin = LinearRegression().fit(data_size, runtimes)
     lin_score = lin.score(data_size, runtimes)
 
-    poly_features = PolynomialFeatures(degree=2).fit_transform(data_size)
-    poly = LinearRegression().fit(poly_features, runtimes)
-    poly_score = poly.score(poly_features, runtimes)
-    # print(f + " LinR: " + str(lin_score) + ", PolyR:" + str(poly_score))
-    if lin_score > poly_score:
-        return int(lin.predict(numpy.array([my_size]).reshape(-1, 1)))
-    else:
-        return int(lin.predict(numpy.array([my_size]).reshape(-1, 1)))
+    # poly_features = PolynomialFeatures(degree=2).fit_transform(data_size)
+    # poly = LinearRegression().fit(poly_features, runtimes)
+    # poly_score = poly.score(poly_features, runtimes)
+    print(f + " LinR: " + str(lin_score))
+    # if lin_score > poly_score:
+    return int(lin.predict(numpy.array([my_size]).reshape(-1, 1)))
+    # else:
+    # return int(poly.predict(numpy.array([my_size]).reshape(-1, 1)))
 
 
-all_features = ["size", "abs_energy", "abs_max", "abs_sum_of_changes", "avg_dev", "count_above_mean",
+all_features = ["abs_energy", "abs_max", "abs_sum_of_changes", "avg_dev", "count_above_mean",
                 "count_below_mean", "first_location_of_max", "first_location_of_min", "interquartile_range", "kurtosis",
                 "last_location_of_max", "last_location_of_min", "max", "mean", "mean_abs_changes", "mean_abs_dev",
                 "mean_changes", "mean_geometric_abs", "median", "median_abs_dev", "median_abs_changes",
-                "median_changes",
-                "min", "negative_turnings", "non_zero_count", "positive_turnings", "root_mean_square", "skewness",
-                "std_dev", "sum", "var", "zero_cross", "mean_n_abs_max", "change_quantile", "range_count",
-                "count_above", "count_below", "quantile", "autocorrelation"]
+                "median_changes", "min", "negative_turnings", "non_zero_count", "positive_turnings", "root_mean_square",
+                "skewness", "std_dev", "sum", "var", "zero_cross", "mean_n_abs_max", "change_quantile", "range_count",
+                "count_above", "count_below", "quantile", "autocorrelation", "fft", "mfcc", "lpc", "lpcc"]
 write_cache_time = 45
 read_cache_time = 55
 
@@ -50,8 +49,7 @@ graph = nx.DiGraph()
 graph.add_edges_from(
     [("root", "mean"), ("mean", "var"), ("var", "std_dev"), ("std_dev", "kurtosis"), ("mean", "kurtosis"),
      ("mean", "skewness"), ("std_dev", "skewness"), ("mean", "autocorrelation"), ("var", "autocorrelation"),
-     ("root", "lpc"), ("lpc", "lpcc"), ("root", "fft"), ("fft", "mfcc"), ("root", "abs_energy"),
-     ("abs_energy", "root_mean_square"), ("root", "median"), ("median", "median_abs_dev"),
+     ("root", "abs_energy"), ("abs_energy", "root_mean_square"), ("root", "median"), ("median", "median_abs_dev"),
      ("max", "first_location_of_max"), ("root", "max"), ("max", "last_location_of_max"), ("root", "min"),
      ("min", "first_location_of_min"), ("min", "last_location_of_min"), ("mean", "avg_dev"), ("mean", "mean_abs_dev"),
      ("mean", "count_above_mean"), ("mean", "count_below_mean")])

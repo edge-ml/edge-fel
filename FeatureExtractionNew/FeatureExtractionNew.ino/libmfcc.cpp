@@ -59,7 +59,6 @@ float getCoefficient(vector<cd>& spectralData, unsigned int samplingRate, unsign
 	}
 
 	result *= outerSum;
-
 	return result;
 }
 

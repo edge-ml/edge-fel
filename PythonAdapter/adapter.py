@@ -16,11 +16,11 @@ default_params = {
     "mfcc_sampling_rate": 100,
     "mfcc_num_filter": 48,
     "mfcc_m": 1,
-    "lpc_auto_n": 1,
-    "lpc_n": 1,
-    "lpcc_auto_n": 1,
-    "lpcc_n": 1,
-    "lpcc_cep_length": 1
+    "lpc_auto_n": 10,
+    "lpc_n": 10,
+    "lpcc_auto_n": 10,
+    "lpcc_n": 10,
+    "lpcc_cep_length": 10
 }
 
 
@@ -50,30 +50,36 @@ def default_mode():
         params = ""
     arduino_input = "transfer data of size\n" + str(data_size) + arduino_input + "\n" + features + "\n" + params + "\n"
     port.write(bytes(arduino_input, 'utf-8'))
-    print(port.read_until('Close session\n', 10000).decode())
+    print(port.read_until('Close session\n', 100000).decode())
+
 
 def compare_mode():
-    params = default_params_to_string()
-    data_size = 10
-    while data_size <= 2000:
-        arduino_input = ""
-        k = 0
-        j = 0
-        while k < data_size:
-            if not j < len(data):
-                j = 0
-            arduino_input += " " + str(data[j])
-            k += 1
-            j += 1
-
-        arduino_input = "transfer data of size\n" + str(data_size) + arduino_input + "\nall1\n" + params + "\n"
-        port.write(bytes(arduino_input, 'utf-8'))
-        print(port.read_until('Close session\n', 10000).decode())
-
-        if data_size < 100:
-            data_size += 10
-        else:
+    path = "runtime_results/runtimes_all_nano.csv"
+    with open(path, "w", newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(["size/run_nr", 1])
+        params = default_params_to_string()
+        data_size = 100
+        while data_size <= 2000:
+            arduino_input = ""
+            k = 0
+            j = 0
+            while k < data_size:
+                if not j < len(data):
+                    j = 0
+                arduino_input += " " + str(data[j])
+                k += 1
+                j += 1
+            runtimes = [data_size]
+            arduino_input = "transfer data of size\n" + str(data_size) + arduino_input + "\nall\n" + params + "\n"
+            port.write(bytes(arduino_input, 'utf-8'))
+            output = port.readlines()
+            for line in output:
+                if "Extract all has finished" in line.decode():
+                    runtimes.append(int(line.decode().split()[5]))
+            writer.writerow(runtimes)
             data_size += 100
+
 
 def collect_mode():
     board = input("Enter connected Arduino board: ")
@@ -99,7 +105,8 @@ def collect_mode():
                 j += 1
 
             arduino_input = "transfer data of size\n" + str(
-                data_size) + arduino_input + "\nall_iterative\n" + params + "\n"
+                # data_size) + arduino_input + "\nall_iterative\n" + params + "\n"
+                data_size) + arduino_input + "\nlpc\n" + params + "\n"
             port.write(bytes(arduino_input, 'utf-8'))
 
             output = port.readlines()
@@ -124,7 +131,7 @@ def collect_mode():
 
 
 mode = input("Enter user mode (default/collect/predict): ")
-port = serial.Serial('COM3', 115200, timeout=1)
+port = serial.Serial('COM4', 115200, timeout=1)
 running = True
 while running:
     dataset_name = input("Enter path to dataset: ")

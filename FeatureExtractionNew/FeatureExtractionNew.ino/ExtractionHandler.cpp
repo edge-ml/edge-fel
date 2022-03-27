@@ -301,7 +301,6 @@ vector<float> ExtractionHandler::handle_lpc(string feature, vector<float>& value
 		}
 		autoc.insert(autoc.begin(), corr/ auto_n);
 	}
-	
 	return extractor.lpc(autoc, lpc_n);
 }
 

@@ -10,6 +10,34 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\runtime_results\runtimes_nano.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\runtime_results\runtimes_nano_fft.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\runtime_results\runtimes_nano_lpc.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\runtime_results\runtimes_nano_mfcc.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\runtime_results\runtimes_nicla.csv">
           <value>
             <Attribute>

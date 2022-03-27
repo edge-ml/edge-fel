@@ -94,7 +94,7 @@ void loop() {
                 std::map<string, float> params;
                 static char param[PARAM_LENGTH];
                 static unsigned int param_pos = 0;
- 
+
                 while (Serial.available() > 0) {
                   //Check for params
                   next = Serial.read();
@@ -116,7 +116,6 @@ void loop() {
                 Serial.print("Param transfer finished, took ");
                 Serial.print(dur);
                 Serial.println(F(" µs"));
-                
                 ExtractionDelegate delegate;
                 ExtractionDelegate::doCache = caching;
                 //long dur;
@@ -139,8 +138,7 @@ void loop() {
                     dur = micros() - timer;
                     results.emplace(iter.first, res);
                     printTime(iter.first, res, dur);
-                  }
-
+                  } 
                   for (string feature : ExtractionDelegate::parameterFeatures) {
                     timer = micros();
                     float res = delegate.extractOne(feature, values, params);
@@ -148,7 +146,6 @@ void loop() {
                     results.emplace(feature, res);
                     printTime(feature, res, dur);
                   }
-
                 } else if (strstr(input, "some")) {
                   char* features = strtok(input, " ");
                   features = strtok(NULL, " ");
@@ -172,6 +169,9 @@ void loop() {
                   timer = micros();
                   vector<float> coeffs = delegate.extractOneVectorial(input, values, params);
                   dur = micros() - timer;
+                  for (auto value : coeffs){
+                    Serial.println(value);
+                  }
                   printTime(input, coeffs[0], dur);
 
                 } else {

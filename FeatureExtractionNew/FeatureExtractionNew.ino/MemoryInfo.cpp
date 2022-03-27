@@ -2,7 +2,7 @@
 
 void print_memory_info() {
     // allocate enough room for every thread's stack statistics
-    int cnt = osThreadGetCount();
+    /*int cnt = osThreadGetCount();
     mbed_stats_stack_t *stats = (mbed_stats_stack_t*) malloc(cnt * sizeof(mbed_stats_stack_t));
     cnt = mbed_stats_stack_get_each(stats, cnt);
     for (int i = 0; i < cnt; i++) {
@@ -13,7 +13,7 @@ void print_memory_info() {
       Serial.print(F(" / "));
       Serial.println(stats[i].reserved_size);
     }
-    free(stats);
+    free(stats);*/
  
     // Grab the heap statistics
     mbed_stats_heap_t heap_stats;
