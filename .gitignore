@@ -31,5 +31,9 @@
 *.out
 *.app
 
+# IntelliJ
+*.iml
+
 # Folders
-ExtractionTests/
+PythonAdapter/.idea/
+PythonAdapter/__pycache__/
