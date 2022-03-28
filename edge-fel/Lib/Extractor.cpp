@@ -495,7 +495,8 @@ float Extractor::positive_turnings(vector<float>& values) {
   return amount;
 }
 
-//Calculates a mfc coefficient
+//Calculates a mfcc coefficient, implementation from
+//https://github.com/jsawruk/libmfcc
 float Extractor::mfcc(vector<cd>& values, int samplingRate, int numFilters, int m) {
   return getCoefficient(values, samplingRate, numFilters, values.size(), m);
 }
@@ -512,6 +513,7 @@ float Extractor::autocorrelation(vector<float>& values, int lag, float mean, flo
 }
 
 
+//Interative cooley-turkey fft algorithm, adapted from
 //https://www.geeksforgeeks.org/iterative-fast-fourier-transformation-polynomial-multiplication/
 vector<cd> Extractor::fft(std::vector<float>& values) {
 
@@ -583,7 +585,8 @@ unsigned int Extractor::bitReverse(unsigned int x, int log2n) {
   return n;
 }
 
-//Calculates n lpc coefficients
+//Calculates n lpc coefficients, implementation from
+//https://github.com/jamiebullock/LibXtract
 vector<float> Extractor::lpc(vector<float>& autoc, int n) {
   vector<float> lpc(n - 1, 0);
   float error = autoc[0];
@@ -617,6 +620,8 @@ vector<float> Extractor::lpc(vector<float>& autoc, int n) {
   return lpc;
 }
 
+//Calculates a cepstrum length of lpc coefficients, implementation from
+//https://github.com/jamiebullock/LibXtract
 vector<float> Extractor::lpcc(vector<float>& lpc_coeffs, int cep_length) {
   int order = lpc_coeffs.size() - 1; /* Eventually change this to Q = 3/2 p as suggested in Rabiner */
   vector<float> lpcc(cep_length, 0);
