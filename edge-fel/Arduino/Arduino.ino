@@ -4,7 +4,7 @@
 #include "mbed.h"
 #include "Cmplx.h"
 #include <vector>
-#include "MemoryInfo.h"
+#include "util/MemoryInfo.h"
 
 using namespace eh;
 using namespace ed;
