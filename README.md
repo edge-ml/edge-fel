@@ -1,15 +1,15 @@
-# feature-extraction
-Feature extraction library by _edge-ml_ focused on efficiency written in C++ for Arduino.
+# edge-fel
+Feature extraction library by _edge-ml_ focused on efficiency written in C++, compatible to Arduino. Edge-fel extracts up to 43 features from one-dimensional time series data and includes a python benchmarking tool with a build-in runtime predictor.
 
-### Questions:
-- we want to avoid loading useless methods onto arduino if we do not need them (but is it really worth it? how much can we save?) Probably the compiler just excludes them?
-- we want to have control over the feature extraction library that we are using in the backend stack. are there existing options that make more sense to reuse?
-- what broader benefit could we generate aside from edge-ml with this library?
-- what about backward compatability to tsfresh? can we port another framework maybe?
-- how to setup the project? Which framework do we use for testing?
+## Main library
+The main library classes can be found in edge-fel/Lib. The ExtractionDelegate is the entry point and provides wrapper functions for easier access. It also include a cache-map for calculated features, used for "cascading features".
+
+## Cascading features
+
+## Benchmarker
 
 ## List of features
-Just some basic random stuff for now.
+The library offers 43 different features. 39 features are statistical, scalar features, the remaining 4 being vectorial representations of input data.
 
 | Acronym   | Signature                      | Description                                                                              | Status  |
 | :-------- | :----------------------------- | :--------------------------------------------------------------------------------------- | :-----  |
