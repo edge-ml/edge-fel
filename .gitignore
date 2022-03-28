@@ -35,5 +35,5 @@
 *.iml
 
 # Folders
-PythonAdapter/.idea/
-PythonAdapter/__pycache__/
+Benchmarker/.idea/
+Benchmarker/__pycache__/
