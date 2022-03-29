@@ -19,6 +19,7 @@ To add new features, an explicit calculation function has to added to the Extrac
 |:--:| 
 | *Feature dependencies in edge-fel* |
 
+
 ## Benchmarker
 The python benchmarking tool can collect runtime information of features and predict their runtimes. Connect an Arduino board first and select between three different user modes. At the same time, upload the Arduino firmware provided in the Arduino folder onto you board, so both the firmware and the python script run at the same time.
 
@@ -30,9 +31,8 @@ In the collect mode, select a dataset from a csv file, params and specify the na
 
 ### Predict mode
 Enter features for which a runtime prediction should be performed, datasize, caching activation and the connected board. The name of the connected board has to match the name of a csv with runtime information. The runtimes csv file will be used by the mode to build regression models and estimate the runtime an extraction. Timesave with caching is account for by a recursive depth-first search algorithm.
-[PredictionAlgorithm](https://user-images.githubusercontent.com/57221675/160582033-9f6c4c79-5bc9-4c45-bf71-124ce7bbecc7.PNG)
 
-| ![PredictionAlgo](/Docs/PredictionAlgo.png?raw=true "edge-fel runtime prediction algorithm") |
+| ![PredictionAlgo](/Docs/PredictionAlgo.PNG?raw=true "edge-fel runtime prediction algorithm") |
 |:--:| 
 | *Runtime prediction algorithm in edge-fel benchmarking tool* |
 
