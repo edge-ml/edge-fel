@@ -2,15 +2,22 @@
 Feature extraction library by _edge-ml_ focused on efficiency written in C++, compatible to Arduino. Edge-fel extracts up to 43 features from one-dimensional time series data and includes a python benchmarking tool with a build-in runtime predictor.
 
 ## Main library
-The main library classes can be found in edge-fel/Lib. ExtractionDelegate is the entry point and provides wrapper functions for easier access. It also include a cache-map for calculated features, used for "cascading features". ExtractionHandler has a handler function for every feature and is concerned with proving extraction function with parameters. Extractor offer a extraction function for every feature. Each function is written in a "cascading feature"-style, presented in https://github.com/jamiebullock/LibXtract.
+The main library classes can be found in edge-fel/Lib. ExtractionDelegate is the entry point and provides wrapper functions for easier access. It also include a cache-map for calculated features, used for "cascading features". ExtractionHandler has a handler function for every feature and is concerned with proving extraction function with parameters. Extractor offer a extraction function for every feature. Each function is written in a "cascading feature"-style, presented in https://github.com/jamiebullock/LibXtract, allowing for faster runtimes and dynamic feature usages.
 
-[ClassDiagram](https://user-images.githubusercontent.com/57221675/160573871-26cd804b-aafc-44c8-87bc-9fb7b532d5ac.png)
+| ![ClassDiagram](/Docs/ClassDiagram.png?raw=true "edge-fel Class Diagram") |
+|:--:| 
+| *Class Diagram of edge-fel* |
+
 
 ### Cascading features
 Every extraction function for feature is designed in a way, that it does not calculate other features needed for the feature, but expects them as a parameter. As an example, the extraction function for variance does not calculate mean, but receives as a parameter. Already calculated features are saved in a cache-map and reused, to avoid unnecessary recalculations.   
 
 ### Adding custom features
-To add new features, an explicit calculation function has to added to the Extractor class. Optimally, the function is designed in "cascading feature"-style. An overview of all current feature dependencies can be found here: [FeatureDAG](https://user-images.githubusercontent.com/57221675/160575350-e64eea42-b8fe-4283-8315-2aba6f761e18.png). Additionally, a handler function in the ExtractionHandler class needs to be added. If the feature should be cached, add a cache write call be the checkAndInsert() function as implemented in handle_mean(). If the feature needs other features, add a cache read as seen in handle_variance(). Finally, add the handler function to the handler map in the ExtractionDelegate class.
+To add new features, an explicit calculation function has to added to the Extractor class. Optimally, the function is designed in "cascading feature"-style. An overview of all current feature dependencies can be found below. Additionally, a handler function in the ExtractionHandler class needs to be added. If the feature should be cached, add a cache write call be the checkAndInsert() function as implemented in handle_mean(). If the feature needs other features, add a cache read as seen in handle_variance(). Finally, add the handler function to the handler map in the ExtractionDelegate class.
+
+| ![FeatureDAG](/Docs/FeatureDAG.png?raw=true "edge-fel feature dependencies") |
+|:--:| 
+| *Feature dependencies in edge-fel* |
 
 ## Benchmarker
 The python benchmarking tool can collect runtime information of features and predict their runtimes. Connect an Arduino board first and select between three different user modes. At the same time, upload the Arduino firmware provided in the Arduino folder onto you board, so both the firmware and the python script run at the same time.
@@ -24,6 +31,10 @@ In the collect mode, select a dataset from a csv file, params and specify the na
 ### Predict mode
 Enter features for which a runtime prediction should be performed, datasize, caching activation and the connected board. The name of the connected board has to match the name of a csv with runtime information. The runtimes csv file will be used by the mode to build regression models and estimate the runtime an extraction. Timesave with caching is account for by a recursive depth-first search algorithm.
 [PredictionAlgorithm](https://user-images.githubusercontent.com/57221675/160582033-9f6c4c79-5bc9-4c45-bf71-124ce7bbecc7.PNG)
+
+| ![PredictionAlgo](/Docs/PredictionAlgo.png?raw=true "edge-fel runtime prediction algorithm") |
+|:--:| 
+| *Runtime prediction algorithm in edge-fel benchmarking tool* |
 
 
 ## List of features
