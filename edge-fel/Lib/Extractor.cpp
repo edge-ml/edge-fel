@@ -497,6 +497,11 @@ float Extractor::positive_turnings(vector<float>& values) {
 
 //Calculates a mfcc coefficient, implementation from
 //https://github.com/jsawruk/libmfcc
+//Copyright (c) 2010 Jeremy Sawruk
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+//to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+//and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 float Extractor::mfcc(vector<cd>& values, int samplingRate, int numFilters, int m) {
   return getCoefficient(values, samplingRate, numFilters, values.size(), m);
 }
@@ -587,6 +592,11 @@ unsigned int Extractor::bitReverse(unsigned int x, int log2n) {
 
 //Calculates n lpc coefficients, implementation from
 //https://github.com/jamiebullock/LibXtract
+//Copyright (C) 2012 Jamie Bullock
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+//to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+//and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 vector<float> Extractor::lpc(vector<float>& autoc, int n) {
   vector<float> lpc(n - 1, 0);
   float error = autoc[0];
@@ -622,6 +632,12 @@ vector<float> Extractor::lpc(vector<float>& autoc, int n) {
 
 //Calculates a cepstrum length of lpc coefficients, implementation from
 //https://github.com/jamiebullock/LibXtract
+//Copyright (C) 2012 Jamie Bullock
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+//to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+//and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
 vector<float> Extractor::lpcc(vector<float>& lpc_coeffs, int cep_length) {
   int order = lpc_coeffs.size() - 1; /* Eventually change this to Q = 3/2 p as suggested in Rabiner */
   vector<float> lpcc(cep_length, 0);
