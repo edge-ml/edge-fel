@@ -6,6 +6,11 @@ using namespace ex;
 using namespace std;
 using namespace co;
 
+//Returns the length of the values
+float Extractor::length(vector<float>& values) {
+  return values.size();
+}
+
 //Returns the mean of the values
 float Extractor::mean(vector<float>& values) {
   float sum = 0;

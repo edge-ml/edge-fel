@@ -8,6 +8,12 @@ using namespace co;
 
 Extractor extractor;
 
+//Handler function for length
+float ExtractionHandler::handle_length(string feature, vector<float>& values) {
+	float value = extractor.length(values);
+	return value;
+}
+
 //Handler function for mean, caches value
 float ExtractionHandler::handle_mean(string feature, vector<float>& values) {
 	if (ExtractionDelegate::doCache && ExtractionDelegate::calculated.count(feature)) {

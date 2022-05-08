@@ -1,6 +1,10 @@
 #include "ExtractionDelegate.h"
 #include <iostream>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/bind.h>
+#endif
+
 using namespace ed;
 using namespace eh;
 using namespace std;
@@ -97,6 +101,8 @@ void ExtractionDelegate::checkAndInsert(string feature, float value) {
 
 //Initializes the handler map 
 void ExtractionDelegate::fillHandlerMap() {
+	ExtractionDelegate::handlers.emplace("length", &ExtractionHandler::handle_length);
+
 	ExtractionDelegate::handlers.emplace("mean", &ExtractionHandler::handle_mean);
 	ExtractionDelegate::handlers.emplace("mean_abs_dev", &ExtractionHandler::handle_mean_abs_dev);
 	ExtractionDelegate::handlers.emplace("mean_geometric_abs", &ExtractionHandler::handle_mean_geometric_abs);
@@ -134,3 +140,20 @@ void ExtractionDelegate::fillHandlerMap() {
 	ExtractionDelegate::handlers.emplace("positive_turnings", &ExtractionHandler::handle_positive_turnings);
 
 }
+
+#ifdef __EMSCRIPTEN__
+EMSCRIPTEN_BINDINGS(extraction_delegate)
+{
+	// register bindings for parameters and return values.
+	emscripten::register_vector<float>("vectorfloat");
+	emscripten::register_vector<std::string>("vectorstring");
+	emscripten::register_map<std::string, float>("mapstringfloat");
+	emscripten::class_<ExtractionDelegate>("ExtractionDelegate")
+		.constructor<>()
+		.function("extractOne", &ExtractionDelegate::extractOne)
+		.function("extractOneVectorial", &ExtractionDelegate::extractOneVectorial)
+		.function("extractSome", &ExtractionDelegate::extractSome)
+		.function("extractAll", &ExtractionDelegate::extractAll)
+		.function("extractSpectrum", &ExtractionDelegate::extractSpectrum);
+}
+#endif
