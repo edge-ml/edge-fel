@@ -1,6 +1,10 @@
 #include "ExtractionDelegate.h"
 #include <iostream>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/bind.h>
+#endif
+
 using namespace ed;
 using namespace eh;
 using namespace std;
@@ -134,3 +138,16 @@ void ExtractionDelegate::fillHandlerMap() {
 	ExtractionDelegate::handlers.emplace("positive_turnings", &ExtractionHandler::handle_positive_turnings);
 
 }
+
+#ifdef __EMSCRIPTEN__
+EMSCRIPTEN_BINDINGS(extraction_delegate)
+{
+	emscripten::class_<ExtractionDelegate>("ExtractionDelegate")
+		.constructor<>()
+		.function("extractOne", &ExtractionDelegate::extractOne)
+		.function("extractOneVectorial", &ExtractionDelegate::extractOneVectorial)
+		.function("extractSome", &ExtractionDelegate::extractSome)
+		.function("extractAll", &ExtractionDelegate::extractAll)
+		.function("extractSpectrum", &ExtractionDelegate::extractSpectrum);
+}
+#endif
