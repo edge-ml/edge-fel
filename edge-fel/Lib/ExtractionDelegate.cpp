@@ -142,6 +142,10 @@ void ExtractionDelegate::fillHandlerMap() {
 #ifdef __EMSCRIPTEN__
 EMSCRIPTEN_BINDINGS(extraction_delegate)
 {
+	// register bindings for parameters and return values.
+	emscripten::register_vector<float>("vectorfloat");
+	emscripten::register_vector<std::string>("vectorstring");
+	emscripten::register_map<std::string, float>("mapstringfloat");
 	emscripten::class_<ExtractionDelegate>("ExtractionDelegate")
 		.constructor<>()
 		.function("extractOne", &ExtractionDelegate::extractOne)
