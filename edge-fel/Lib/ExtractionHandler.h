@@ -14,6 +14,8 @@ namespace eh {
 
 	public:
 		
+		float handle_length(std::string, std::vector<float>&);
+
 		float handle_mean(std::string, std::vector<float>&);
 		float handle_mean_abs_dev(std::string, std::vector<float>&);
 		float handle_mean_geometric_abs(std::string, std::vector<float>&);

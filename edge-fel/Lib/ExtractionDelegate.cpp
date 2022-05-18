@@ -101,6 +101,8 @@ void ExtractionDelegate::checkAndInsert(string feature, float value) {
 
 //Initializes the handler map 
 void ExtractionDelegate::fillHandlerMap() {
+	ExtractionDelegate::handlers.emplace("length", &ExtractionHandler::handle_length);
+
 	ExtractionDelegate::handlers.emplace("mean", &ExtractionHandler::handle_mean);
 	ExtractionDelegate::handlers.emplace("mean_abs_dev", &ExtractionHandler::handle_mean_abs_dev);
 	ExtractionDelegate::handlers.emplace("mean_geometric_abs", &ExtractionHandler::handle_mean_geometric_abs);

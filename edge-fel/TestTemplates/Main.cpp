@@ -53,7 +53,7 @@ int main() {
 			"abs_sum_of_changes", "root_mean_square", "interquartile_range", "negative_turnings",
 			"positive_turnings", "autocorrelation" };*/
 
-	vector<string> features = { "mean", "var", "std_dev", "avg_dev", "skewness", "kurtosis", "zero_cross", "root_mean_square", "sum", "min", "max", "non_zero_count" };
+	vector<string> features = { "length", "mean", "var", "std_dev", "avg_dev", "skewness", "kurtosis", "zero_cross", "root_mean_square", "sum", "min", "max", "non_zero_count" };
 
 	vector<float> values = Data::values_thousand;
 	ExtractionDelegate delegate;

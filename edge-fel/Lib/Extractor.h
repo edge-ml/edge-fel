@@ -15,6 +15,8 @@ namespace ex {
 	{
 	public:
 
+		float length(std::vector<float>&);
+
 		float mean(std::vector<float>&);
 		float mean_abs_dev(std::vector<float>&, float);
 		float mean_geometric_abs(std::vector<float>&);
